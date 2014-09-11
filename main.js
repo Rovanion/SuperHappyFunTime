@@ -9,6 +9,7 @@ window.onload = function() {
         }
 
 	var platforms;
+	var character;
 
         function create () {
 		game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -37,6 +38,6 @@ window.onload = function() {
         }
 
 	function update() {
-
+		game.physics.arcade.collide(character, platforms);
 	}
 };
