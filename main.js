@@ -33,7 +33,8 @@ window.onload = function() {
 		character.body.gravity.y = 300;
 		character.body.collideWorldBounds = true;
 
-		character.animations.add('right', [0, 1, 2, 3], 10);
+		character.animations.add('left', [0, 1, 2, 3], 10);
+		character.animations.add('right', [4, 5, 6, 7], 10);
         }
 
 	function update() {
