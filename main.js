@@ -35,9 +35,14 @@ window.onload = function() {
 		character.body.gravity.y = 300;
 		character.body.collideWorldBounds = true;
 
+<<<<<<< HEAD
 		character.animations.add('right', [0, 1, 2, 3], 10);
 
 		cursors = game.input.keyboard.createCursorKeys();
+=======
+		character.animations.add('left', [0, 1, 2, 3], 10);
+		character.animations.add('right', [4, 5, 6, 7], 10);
+>>>>>>> 0a1f5dce4ee80ccf82845c26e74db2b5105a10c5
         }
 
 	function update() {
