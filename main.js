@@ -35,23 +35,27 @@ window.onload = function() {
 		character.body.gravity.y = 300;
 		character.body.collideWorldBounds = true;
 
-<<<<<<< HEAD
-		character.animations.add('right', [0, 1, 2, 3], 10);
-
 		cursors = game.input.keyboard.createCursorKeys();
-=======
+
 		character.animations.add('left', [0, 1, 2, 3], 10);
 		character.animations.add('right', [4, 5, 6, 7], 10);
->>>>>>> 0a1f5dce4ee80ccf82845c26e74db2b5105a10c5
+
         }
 
 	function update() {
 		game.physics.arcade.collide(character, platforms);
+		
+		character.body.velocity.x = 0;
 
 		if (cursors.right.isDown) {
 			character.body.velocity.x = 300;
 			
 			character.animations.play('right');
+		}
+		else if (cursors.left.isDown) {
+			character.body.velocity.x = -300;
+
+			character.animations.play('left');
 		}
 		else {
 			character.animations.stop();
