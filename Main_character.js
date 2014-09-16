@@ -22,12 +22,13 @@ create: function() {
 		this.game.physics.arcade.enable(this.sprite);
 		this.sprite.body.bounce.y = this.BOUNCE_FACTOR;
 		this.sprite.body.gravity.y = this.GRAVITY;
-		this.sprite.body.collideWorldBounds = true;
 
 		this.sprite.animations.add('left', [0, 1, 2, 3], 10);
 		this.sprite.animations.add('right', [4, 5, 6, 7], 10);
 
 		this.cursors = this.game.input.keyboard.createCursorKeys();
+
+		this.game.camera.follow(this.sprite);
 	},
 
 update: function() {

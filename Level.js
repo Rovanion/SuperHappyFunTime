@@ -2,6 +2,9 @@ Level = function(game) {
 	this.game = game;
 	this.platforms = null;
 	this.floor = null;
+
+	this.LEVEL_WIDTH = 1600;
+	this.LEVEL_HEIGHT = 600;
 }
 
 Level.prototype = {
@@ -12,7 +15,9 @@ preload: function() {
 	 },
 
 create: function() {	
-		this.game.add.sprite(0, 0, 'background');
+		this.game.add.tileSprite(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT, 'background');
+
+		this.game.world.setBounds(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT);
 
 		this.platforms = this.game.add.group();
 		this.platforms.enableBody = true;
