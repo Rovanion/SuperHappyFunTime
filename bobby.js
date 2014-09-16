@@ -1,53 +1,57 @@
-Main_character = function(game) {
-	this.game = game;
+bobby = function() {
 	this.sprite = null;
 	this.cursors = null;
 
 	this.INITIAL_POSITION_X = 32;
 	this.INITIAL_POSITION_Y = game.world.height - 150;
-	this.GRAVITY = 300;
-	this.BOUNCE_FACTOR = 0.2;
-	this.VELOCITY = 300;
-	this.JUMP_VELOCITY = -200;
-} 
+	this.GRAVITY = 500;
+	this.ACCELERATION = 60;
+	this.JUMP_VELOCITY = -250;
+}
 
-Main_character.prototype = {
+bobby.prototype = {
 
-preload: function() {
-		 this.game.load.spritesheet('character', 'assets/character_sprite_sheet.png', 64, 79);
-	 },
+	preload: function() {
+		game.load.spritesheet('character', 'assets/character_sprite_sheet.png', 64, 79);
+	},
 
-create: function() {
-		this.sprite = this.game.add.sprite(this.INITIAL_POSITION_X, this.INITIAL_POSITION_Y, 'character');
-		this.game.physics.arcade.enable(this.sprite);
-		this.sprite.body.bounce.y = this.BOUNCE_FACTOR;
+	create: function() {
+		this.sprite = game.add.sprite(this.INITIAL_POSITION_X, this.INITIAL_POSITION_Y, 'character');
+		game.physics.arcade.enable(this.sprite);
 		this.sprite.body.gravity.y = this.GRAVITY;
 
 		this.sprite.animations.add('left', [0, 1, 2, 3], 10);
 		this.sprite.animations.add('right', [4, 5, 6, 7], 10);
 
-		this.cursors = this.game.input.keyboard.createCursorKeys();
+		this.cursors = game.input.keyboard.createCursorKeys();
 
-		this.game.camera.follow(this.sprite);
+		game.camera.follow(this.sprite);
 	},
 
-update: function() {
-		this.sprite.body.velocity.x = 0;
+	update: function() {
 
-		if (this.cursors.right.isDown) {
-			this.sprite.body.velocity.x = this.VELOCITY;
-			this.sprite.animations.play('right');
-		}
-		else if (this.cursors.left.isDown) {
-			this.sprite.body.velocity.x = -this.VELOCITY;
-			this.sprite.animations.play('left');
-		}
-		else {
-			this.sprite.animations.stop();
-		}
+		if(this.sprite.body.touching.down){
+			if(this.sprite.body.velocity.x == NaN){
+				this.sprite.body.velocity.x = 0;
+			}
+			else{
+				this.sprite.body.velocity.x = this.sprite.body.velocity.x / 1.25;
+			}
+			if (this.cursors.right.isDown) {
+				this.sprite.body.velocity.x += this.ACCELERATION;
+				this.sprite.animations.play('right');
+			}
+			else if (this.cursors.left.isDown) {
+				this.sprite.body.velocity.x += -this.ACCELERATION;
+				this.sprite.animations.play('left');
+			}
 
-		if (this.cursors.up.isDown && this.sprite.body.touching.down) {
-			this.sprite.body.velocity.y = this.JUMP_VELOCITY;
+			if (this.cursors.up.isDown) {
+				this.sprite.body.velocity.y = this.JUMP_VELOCITY;
+			}
+		}
+		else{
+
 		}
 	}
 };
