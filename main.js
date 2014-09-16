@@ -1,6 +1,6 @@
 window.onload = function() {
 
-	game = new Phaser.Game(800, 300, Phaser.AUTO, '', { preload: preload, create: create, update: update});
+	game = new Phaser.Game(800, 300, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render});
 
 	level = null;
 	character = null;
@@ -27,5 +27,9 @@ window.onload = function() {
 		if(game.input.keyboard.isDown(Phaser.Keyboard.R)){
 			character.sprite.reset(character.INITIAL_POSITION_X, character.INITIAL_POSITION_Y, 1);
 		}
+	}
+
+	function render() {
+		character.render();
 	}
 };

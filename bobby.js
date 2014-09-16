@@ -1,6 +1,8 @@
 bobby = function() {
 	this.sprite = null;
 	this.cursors = null;
+	this.rope = null;
+	this.turned_right = true;
 
 	this.INITIAL_POSITION_X = 32;
 	this.INITIAL_POSITION_Y = game.world.height;
@@ -28,6 +30,8 @@ bobby.prototype = {
 		this.cursors = game.input.keyboard.createCursorKeys();
 
 		game.camera.follow(this.sprite);
+
+		this.rope = new Phaser.Line(this.sprite.position.x + 64, this.sprite.position.y, this.sprite.position.x + 64, this.sprite.position.y);
 	},
 
 	update: function() {
@@ -42,10 +46,12 @@ bobby.prototype = {
 			if (this.cursors.right.isDown) {
 				this.sprite.body.velocity.x += this.ACCELERATION;
 				this.sprite.animations.play('right');
+				this.turned_right = true;
 			}
 			else if (this.cursors.left.isDown) {
 				this.sprite.body.velocity.x += -this.ACCELERATION;
 				this.sprite.animations.play('left');
+				this.turned_right = false;
 			}
 
 			if (this.cursors.up.isDown) {
@@ -55,9 +61,20 @@ bobby.prototype = {
 				else
 					this.sprite.animations.play('jumpLeft');
 			}
+			
 		}
 		else{
 
 		}
+
+		if (this.turned_right)
+			this.rope.start.set(this.sprite.position.x + 64, this.sprite.position.y);
+		else
+			this.rope.start.set(this.sprite.position.x, this.sprite.position.y);
+		this.rope.end.set(game.input.mousePointer.worldX, game.input.mousePointer.worldY);
+	},
+
+render: function() {
+		game.debug.geom(this.rope, '#4c4c33');	
 	}
 };
