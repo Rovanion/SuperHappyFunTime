@@ -13,7 +13,7 @@ window.onload = function() {
 	}
 
 	function create () {
-		game.physics.startSystem(Phaser.Physics.ARCADE);
+		game.physics.startSystem(Phaser.Physics.P2JS);
 
 		level.create();
 		character.create();
