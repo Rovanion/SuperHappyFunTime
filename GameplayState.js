@@ -1,28 +1,28 @@
-gameplaystate = function() {
+GameplayState = function() {
 	Phaser.State.call(this, game);
 	game.state.add('gameplay', this);
 };
 
-gameplaystate.prototype = {
+GameplayState.prototype = {
 	preload: function() {
 		this.level = new Level(this);
 		this.level.preload();
-		this.character = new bobby(this);
-		this.character.preload();
+		this.bobby = new Character(this);
+		this.bobby.preload();
 	},
 
 	create: function() {
 		this.physics.startSystem(Phaser.Physics.P2JS);
 		this.level.create();
-		this.character.create();
+		this.bobby.create();
 	},
 
 	update: function() {
-		this.physics.arcade.collide(this.character.sprite, this.level.platforms);
-		this.character.update();
+		this.physics.arcade.collide(this.bobby.sprite, this.level.platforms);
+		this.bobby.update();
 	},
 
 	render: function() {
-		this.character.render();
+		this.bobby.render();
 	}
 };

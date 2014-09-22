@@ -1,5 +1,5 @@
-Character = function(gameplaystate) {
-	this.gameplaystate = gameplaystate;
+Character = function(gameplayState) {
+	this.gameplaystate = gameplayState;
 	this.resetData();
 };
 
@@ -98,6 +98,10 @@ Character.prototype = {
 		this.GRAVITY = 500;
 		this.ACCELERATION = 60;
 		this.JUMP_ACCELERATION = -250;
+	},
+
+	lol: function(){
+		console.debug("Fuck you");
 	}
 
 };
