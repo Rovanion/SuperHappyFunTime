@@ -1,28 +1,18 @@
-Character = function() {
-	this.sprite = null;
-	this.cursors = null;
-	this.rope = null;
-	this.turned_right = true;
+Character = function(gameplaystate) {
+	this.gameplaystate = gameplaystate;
+	this.resetData();
+};
 
-	this.INITIAL_POSITION_X = 32;
-	this.INITIAL_POSITION_Y = game.world.height;
-	this.GRAVITY = 500;
-	this.ACCELERATION = 60;
-	this.JUMP_ACCELERATION = -250;
 
-	this.hookShot = new HookShot();
-}
 
 Character.prototype = {
 	preload: function() {
-		game.load.spritesheet('character', 'assets/character_sprite_sheet.png', 64, 79);
+		this.gameplaystate.load.spritesheet('character', 'assets/character_sprite_sheet.png', 64, 79);
 	},
 
 	create: function() {
-		this.sprite = game.add.sprite(this.INITIAL_POSITION_X, this.INITIAL_POSITION_Y, 'character');
-		this.sprite.inputEnabled = true;
-
-		game.physics.arcade.enable(this.sprite);
+		this.sprite = this.gameplaystate.add.sprite(this.INITIAL_POSITION_X, this.INITIAL_POSITION_Y, 'character');
+		this.gameplaystate.physics.arcade.enable(this.sprite);
 		this.sprite.body.gravity.y = this.GRAVITY;
 
 		this.sprite.animations.add('left', [0, 1, 2, 3], 15);
@@ -32,9 +22,9 @@ Character.prototype = {
 		this.sprite.animations.add('landLeft', [1], 10);
 		this.sprite.animations.add('landRight', [6], 10);
 
-		this.cursors = game.input.keyboard.createCursorKeys();
+		this.cursors = this.gameplaystate.input.keyboard.createCursorKeys();
 
-		game.camera.follow(this.sprite);
+		this.gameplaystate.camera.follow(this.sprite);
 
 		this.rope = new Phaser.Line(this.sprite.position.x + 64, this.sprite.position.y, this.sprite.position.x + 64, this.sprite.position.y);
 	},
@@ -43,7 +33,7 @@ Character.prototype = {
 
 		if(this.sprite.body.touching.down){
 			// Deaccelerate bobby by friction if he's on the ground
-			if(this.sprite.body.velocity.x == NaN){
+			if(isNaN(this.sprite.body.velocity.x)){
 				this.sprite.body.velocity.x = 0;
 			}
 			else{
@@ -64,7 +54,6 @@ Character.prototype = {
 
 			// Landing animation, note that this must be before the jump function.
 			if(this.jumping){
-				console.debug("landed");
 				this.jumping = false;
 				if(this.sprite.body.velocity.x > 0)
 					this.sprite.animations.play('landRight');
@@ -91,15 +80,24 @@ Character.prototype = {
 		this.rope.end.set(game.input.mousePointer.worldX, game.input.mousePointer.worldY);
 
 		if(game.input.activePointer.isDown)
-			shoot();
+		    this.hookShot.shoot(this.sprite.x, this.sprite.y);
 	},
 
 	render: function() {
 		game.debug.geom(this.rope, '#4c4c33');
 	},
 
-	// The act of shooting a hookshot
-	shoot: function() {
-		this.hookShot.shoot(this.sprite.x, this.sprite.y);
+	resetData: function() {
+		this.sprite = null;
+		this.cursors = null;
+		this.rope = null;
+		this.turned_right = true;
+
+		this.INITIAL_POSITION_X = 32;
+		this.INITIAL_POSITION_Y = this.gameplaystate.world.height;
+		this.GRAVITY = 500;
+		this.ACCELERATION = 60;
+		this.JUMP_ACCELERATION = -250;
 	}
+
 };
