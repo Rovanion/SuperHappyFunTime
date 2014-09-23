@@ -18,16 +18,18 @@ bobby.prototype = {
 		this.sprite.animations.add('right', [5, 6, 7, 4], 15);
 		this.sprite.animations.add('jumpLeft', [2], 10);
 		this.sprite.animations.add('jumpRight', [7], 10);
+		this.sprite.animations.add('landLeft', [1], 10);
+		this.sprite.animations.add('landRight', [6], 10);
 
 		this.cursors = this.gameplaystate.input.keyboard.createCursorKeys();
 
 		this.gameplaystate.camera.follow(this.sprite);
 
-		this.rope = new Phaser.Line(this.sprite.position.worldX + 64, this.sprite.position.worldY, this.sprite.position.worldX + 64, this.sprite.position.worldY);
+		this.rope = new Phaser.Line(this.sprite.position.x + 64, this.sprite.position.y, this.sprite.position.x + 64, this.sprite.position.y);
 	},
 
 	update: function() {
-
+		// Deaccelerate bobby by friction if he's on the ground
 		if(this.sprite.body.touching.down){
 			if(isNaN(this.sprite.body.velocity.x)) {
 				this.sprite.body.velocity.x = 0;
@@ -35,6 +37,8 @@ bobby.prototype = {
 			else{
 				this.sprite.body.velocity.x = this.sprite.body.velocity.x / 1.25;
 			}
+
+			// Walk left and right
 			if (this.cursors.right.isDown) {
 				this.sprite.body.velocity.x += this.ACCELERATION;
 				this.sprite.animations.play('right');
@@ -46,24 +50,38 @@ bobby.prototype = {
 				this.turned_right = false;
 			}
 
+			// Landing animation, note that this must be before the jump function.
+      if(this.jumping){
+        this.jumping = false;
+        if(this.sprite.body.velocity.x > 0)
+          this.sprite.animations.play('landRight');
+        else
+          this.sprite.animations.play('landLeft');
+      }
+
+			// Jump bobby, jump!
 			if (this.cursors.up.isDown) {
+				this.jumping = true;
 				this.sprite.body.velocity.y = this.JUMP_ACCELERATION;
 				if(this.sprite.body.velocity.x > 0)
 					this.sprite.animations.play('jumpRight');
 				else
 					this.sprite.animations.play('jumpLeft');
 			}
-			
-		}
-		else{
 
 		}
 
+		// A guide between bobby and the mouse
 		if (this.turned_right)
-			this.rope.start.set(this.sprite.position.x + 64, this.sprite.position.y);
+			this.rope.start.set(this.sprite.position.x + 55, this.sprite.position.y + 50);
 		else
-			this.rope.start.set(this.sprite.position.x, this.sprite.position.y);
+			 this.rope.start.set(this.sprite.position.x + 10, this.sprite.position.y + 50);
 		this.rope.end.set(this.gameplaystate.input.mousePointer.worldX, this.gameplaystate.input.mousePointer.worldY);
+
+
+		// Fire ze hookshot!
+		if(game.input.activePointer.isDown)
+      this.hookShot.shoot(this.sprite.x, this.sprite.y);
 	},
 
 	render: function() {
