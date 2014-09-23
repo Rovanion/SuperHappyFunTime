@@ -1,13 +1,12 @@
-gameplaystate = function() {
+GameplayState = function() {
 	Phaser.State.call(this, game);
-	game.state.add('gameplay', this);
 };
 
-gameplaystate.prototype = {
+GameplayState.prototype = {
 	preload: function() {
 		this.level = new Level(this);
 		this.level.preload();
-		this.character = new bobby(this);
+		this.character = new Character(this);
 		this.character.preload();
 	},
 

@@ -3,8 +3,8 @@ window.onload = function() {
 	game = new Phaser.Game(800, 300, Phaser.AUTO, '', {create: create});
 
 	function create () {
-		gameplay = new gameplaystate();
-
+		state = new GameplayState();
+		game.state.add('gameplay', state);
 		game.state.start("gameplay");
 	}
 };
