@@ -1,9 +1,9 @@
-bobby = function(gameplaystate) {
+Character = function(gameplaystate) {
 	this.gameplaystate = gameplaystate;
 	this.resetData();
 };
 
-bobby.prototype = {
+Character.prototype = {
 
 	preload: function() {
 		this.gameplaystate.load.spritesheet('character', 'assets/character_sprite_sheet.png', 64, 79);
@@ -81,7 +81,7 @@ bobby.prototype = {
 
 		// Fire ze hookshot!
 		if(game.input.activePointer.isDown)
-      this.hookShot.shoot(this.sprite.x, this.sprite.y);
+      this.hookShot.shoot(this.sprite.x, this.sprite.y, this.sprite);
 	},
 
 	render: function() {
@@ -89,9 +89,11 @@ bobby.prototype = {
 	},
 
 	resetData: function() {
+		// Jag är osäker på om vi vill sätta sprite osv. till null här. Gör inte det att bobbys sprite försvinner när vi resattar?
 		this.sprite = null;
 		this.cursors = null;
 		this.rope = null;
+		this.hookShot = new HookShot();
 		this.turned_right = true;
 
 		this.INITIAL_POSITION_X = 32;
