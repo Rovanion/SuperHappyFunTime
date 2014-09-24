@@ -7,6 +7,9 @@ Level.prototype = {
 	preload: function() {
 		this.gameplaystate.load.image('background', 'assets/background.png');
 		this.gameplaystate.load.image('platform', 'assets/platform.png');
+
+		this.LEVEL_WIDTH = 1600;
+		this.LEVEL_HEIGHT = 600;
 	},
 
 	create: function() {
@@ -27,8 +30,5 @@ Level.prototype = {
 	resetData: function() {
 		this.platforms = null;
 		this.floor = null;
-
-		this.LEVEL_WIDTH = 1600;
-		this.LEVEL_HEIGHT = 600;
 	}
 };
