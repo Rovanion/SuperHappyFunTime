@@ -1,6 +1,6 @@
 Level2 = function() {};
 
-Level2.prototype = new Level();
+Level2.prototype = new Level(1600, 600);
 
 Level2.prototype.loadLevelObjects = function() {
 

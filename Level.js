@@ -1,11 +1,11 @@
-Level = function() {};
+Level = function(width, height) {
+	this.LEVEL_WIDTH = width;
+	this.LEVEL_HEIGHT = height;
+};
 
 Level.prototype = {
 	preload: function() {
 		this.loadAssets();
-
-		this.LEVEL_WIDTH = 1600;
-		this.LEVEL_HEIGHT = 600;
 
 		this.bobby = new Character(this);
 		this.bobby.preload();
