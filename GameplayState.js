@@ -7,6 +7,9 @@ GameplayState.prototype = {
 		this.level = new Level(this);
 		this.level.preload();
 		this.bobby = new Character(this);
+
+		// This only exists for easy access from the console, do not use in code.
+		bobby = this.bobby;
 		this.bobby.preload();
 	},
 

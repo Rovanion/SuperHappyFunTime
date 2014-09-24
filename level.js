@@ -20,7 +20,7 @@ Level.prototype = {
 
 		var floor = this.platforms.create(0, this.gameplaystate.world.height - 64, 'platform');
 		floor.scale.setTo(2, 2);
-		floor.body.immovable = true;	
+		floor.body.immovable = true;
 	},
 
 	resetData: function() {
@@ -28,6 +28,6 @@ Level.prototype = {
 		this.floor = null;
 
 		this.LEVEL_WIDTH = 1600;
-		this.LEVEL_HEIGHT = 600;
+		this.LEVEL_HEIGHT = 400;
 	}
 };

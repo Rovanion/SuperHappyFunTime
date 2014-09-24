@@ -1,5 +1,4 @@
 HookShot = function() {
-	this.velocity = 0;
 }
 
 HookShot.prototype = {
@@ -7,20 +6,27 @@ HookShot.prototype = {
 	 * Function which should be called before the class is used in order to load it's assets
 	 */
 	preload: function() {
-		game.load.image('chain', 'assets/chain.jpg', 64, 79);
-		this.sprite = this.gameplaystate.add.sprite(50, 50, 'chain');
-		this.gameplaystate.physics.arcade.enable(this.sprite);
+		game.state.getCurrentState().load.image('chain', 'assets/chain.png');
 	},
 
-	create: function() {
-		this.sprite = game.add.sprite(200, 20, 'chain');
+	create: function(holder) {
+		// The maximum number of particles is 1000.
+		this.emitter = game.add.emitter(50, 0, 1000);
+		this.emitter.makeParticles('chain');
+
+		holder.addChild(this.emitter);
 	},
 
 	/**
 	 * Shoot the hookshot from one position to the mouse.
-	 * Returns the target which was hit.
+	 * Arguments are:
+	 * x: The x-coordinate of the target.
+	 * y: The y-coordinate of the target.
+	 * attache: The object which should be moved to the target.
+	 * Returns the target which was hit, null if none was hit.
 	 */
 	shoot: function(x, y, attache) {
+		this.emitter.emitParticle();
 		game.physics.arcade.moveToPointer(attache, 500);
 		return null;
 	}

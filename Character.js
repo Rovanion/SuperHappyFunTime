@@ -11,9 +11,11 @@ Character.prototype = {
 
 	create: function() {
 		this.sprite = this.gameplaystate.add.sprite(this.INITIAL_POSITION_X, this.INITIAL_POSITION_Y, 'character');
-		this.gameplaystate.physics.arcade.enable(this.sprite);
+		this.gameplaystate.physics.arcade.enableBody(this.sprite);
 		this.sprite.body.gravity.y = this.GRAVITY;
+		this.sprite.anchor.setTo(0.5, 0.5);
 
+		// Define them animations
 		this.sprite.animations.add('left', [0, 1, 2, 3], 15);
 		this.sprite.animations.add('right', [5, 6, 7, 4], 15);
 		this.sprite.animations.add('jumpLeft', [2], 10);
@@ -25,7 +27,9 @@ Character.prototype = {
 
 		this.gameplaystate.camera.follow(this.sprite);
 
-		this.rope = new Phaser.Line(this.sprite.position.x + 64, this.sprite.position.y, this.sprite.position.x + 64, this.sprite.position.y);
+		this.rope = new Phaser.Line(this.sprite.position.x, this.sprite.position.y, this.sprite.position.x, this.sprite.position.y);
+
+		this.hookShot.create(this.sprite);
 	},
 
 	update: function() {
@@ -73,11 +77,12 @@ Character.prototype = {
 
 		// A guide between bobby and the mouse
 		if (this.turned_right)
-			this.rope.start.set(this.sprite.position.x + 55, this.sprite.position.y + 50);
+			this.rope.start.set(this.sprite.position.x + 55, this.sprite.position.y);
 		else
-			 this.rope.start.set(this.sprite.position.x + 10, this.sprite.position.y + 50);
+			 this.rope.start.set(this.sprite.position.x + 10, this.sprite.position.y);
 		this.rope.end.set(this.gameplaystate.input.mousePointer.worldX, this.gameplaystate.input.mousePointer.worldY);
 
+		this.hookShot.emitter.x = this.sprite.x;
 
 		// Fire ze hookshot!
 		if(game.input.activePointer.isDown)
@@ -94,6 +99,7 @@ Character.prototype = {
 		this.cursors = null;
 		this.rope = null;
 		this.hookShot = new HookShot();
+		this.hookShot.preload();
 		this.turned_right = true;
 
 		this.INITIAL_POSITION_X = 32;
