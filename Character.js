@@ -9,7 +9,7 @@ Character.prototype = {
 		this.gameplaystate.load.spritesheet('character', 'assets/character_sprite_sheet.png', 64, 79);
 
 		this.INITIAL_POSITION_X = 32;
-		this.INITIAL_POSITION_Y = this.gameplaystate.world.height;
+		this.INITIAL_POSITION_Y = 0;
 		this.GRAVITY = 500;
 		this.ACCELERATION = 60;
 		this.JUMP_ACCELERATION = -250;
@@ -34,6 +34,9 @@ Character.prototype = {
 		this.gameplaystate.camera.follow(this.sprite);
 
 		this.rope = new Phaser.Line(this.sprite.position.x + 64, this.sprite.position.y, this.sprite.position.x + 64, this.sprite.position.y);
+
+		this.sprite.checkWorldBounds = true;
+		this.sprite.events.onOutOfBounds.add(this.characterOutsideWorld);
 	},
 
 	update: function() {
@@ -104,6 +107,11 @@ Character.prototype = {
 		this.hookShot = new HookShot();
 		this.turned_right = true;
 		this.jumping = null;
+
+	},
+
+	characterOutsideWorld: function() {
+		game.state.restart(game.state.current);
 	}
 
 };
