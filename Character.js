@@ -1,17 +1,25 @@
 Character = function(gameplaystate) {
-	this.gameplaystate = gameplaystate;
-	this.resetData();
+	this.gameplaystate = gameplaystate;	
+	
 };
 
 Character.prototype = {
 
 	preload: function() {
 		this.gameplaystate.load.spritesheet('character', 'assets/character_sprite_sheet.png', 64, 79);
+
+		this.INITIAL_POSITION_X = 32;
+		this.INITIAL_POSITION_Y = 0;
+		this.GRAVITY = 500;
+		this.ACCELERATION = 60;
+		this.JUMP_ACCELERATION = -250;
 	},
 
 	create: function() {
+		this.resetData();
+
 		this.sprite = this.gameplaystate.add.sprite(this.INITIAL_POSITION_X, this.INITIAL_POSITION_Y, 'character');
-		this.gameplaystate.physics.arcade.enableBody(this.sprite);
+		this.gameplaystate.physics.arcade.enable(this.sprite);
 		this.sprite.body.gravity.y = this.GRAVITY;
 		this.sprite.anchor.setTo(0.5, 0.5);
 
@@ -27,9 +35,11 @@ Character.prototype = {
 
 		this.gameplaystate.camera.follow(this.sprite);
 
-		this.rope = new Phaser.Line(this.sprite.position.x, this.sprite.position.y, this.sprite.position.x, this.sprite.position.y);
-
+	    this.rope = new Phaser.Line(this.sprite.position.x, this.sprite.position.y, this.sprite.position.x, this.sprite.position.y);
+	    
 		this.hookShot.create(this.sprite);
+		this.sprite.checkWorldBounds = true;
+		this.sprite.events.onOutOfBounds.add(this.characterOutsideWorld);
 	},
 
 	update: function() {
@@ -55,13 +65,13 @@ Character.prototype = {
 			}
 
 			// Landing animation, note that this must be before the jump function.
-      if(this.jumping){
-        this.jumping = false;
-        if(this.sprite.body.velocity.x > 0)
-          this.sprite.animations.play('landRight');
-        else
-          this.sprite.animations.play('landLeft');
-      }
+			if(this.jumping){
+				this.jumping = false;
+				if(this.sprite.body.velocity.x > 0)
+					this.sprite.animations.play('landRight');
+				else
+					this.sprite.animations.play('landLeft');
+			}
 
 			// Jump bobby, jump!
 			if (this.cursors.up.isDown) {
@@ -82,11 +92,10 @@ Character.prototype = {
 			 this.rope.start.set(this.sprite.position.x + 10, this.sprite.position.y);
 		this.rope.end.set(this.gameplaystate.input.mousePointer.worldX, this.gameplaystate.input.mousePointer.worldY);
 
-		this.hookShot.emitter.x = this.sprite.x;
 
 		// Fire ze hookshot!
 		if(game.input.activePointer.isDown)
-      this.hookShot.shoot(this.sprite.x, this.sprite.y, this.sprite);
+			this.hookShot.shoot(this.sprite.x, this.sprite.y, this.sprite);
 	},
 
 	render: function() {
@@ -101,12 +110,12 @@ Character.prototype = {
 		this.hookShot = new HookShot();
 		this.hookShot.preload();
 		this.turned_right = true;
+		this.jumping = null;
 
-		this.INITIAL_POSITION_X = 32;
-		this.INITIAL_POSITION_Y = this.gameplaystate.world.height;
-		this.GRAVITY = 500;
-		this.ACCELERATION = 60;
-		this.JUMP_ACCELERATION = -250;
+	},
+
+	characterOutsideWorld: function() {
+		game.state.restart(game.state.current);
 	}
 
 };
