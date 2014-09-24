@@ -20,11 +20,14 @@ Level.prototype = {
 
 		this.world.setBounds(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT);
 
+		this.platforms = this.add.group();
+		this.platforms.enableBody = true;
+
 		this.loadLevelObjects();
+
 		this.bobby.create();
 
-		this.cursors = this.input.keyboard.createCursorKeys();
-
+		// Switch levels with number keys
 		this.levelOneKey = this.input.keyboard.addKey(Phaser.Keyboard.ONE);
 		this.levelTwoKey = this.input.keyboard.addKey(Phaser.Keyboard.TWO);
 		this.levelOneKey.onDown.add(this.switchToLevelOne);
@@ -50,6 +53,12 @@ Level.prototype = {
 		this.cursors = null;
 		this.platforms = null;
 		this.floor = null;
+	},
+
+	addPlatform: function(positionx, positiony, width, height) {
+		var platform = this.platforms.create(positionx, positiony, 'platform');
+		platform.scale.setTo(width/400, height/32);
+		platform.body.immovable = true;
 	},
 
 	switchToLevelOne: function() {
