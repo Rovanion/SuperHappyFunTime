@@ -1,6 +1,5 @@
 Level = function(gameplaystate) {
 	this.gameplaystate = gameplaystate;
-	this.resetData();
 };
 
 Level.prototype = {
@@ -11,6 +10,8 @@ Level.prototype = {
 	},
 
 	create: function() {
+		this.resetData();
+		
 		this.gameplaystate.add.tileSprite(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT, 'background');
 
 		this.gameplaystate.world.setBounds(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT);
