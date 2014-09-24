@@ -1,78 +1,13 @@
-Level1 = function() {
-	Phaser.State.call(this, game);
-};
+Level1 = function() {};
 
-Level1.prototype = {
-	preload: function() {
-		this.loadLevelAssets();
+Level1.prototype = new Level();
 
-		this.LEVEL_WIDTH = 1600;
-		this.LEVEL_HEIGHT = 600;
+Level1.prototype.loadLevelObjects = function() {
 
-		this.bobby = new Character(this);
-		this.bobby.preload();
-	},
+	this.platforms = this.add.group();
+	this.platforms.enableBody = true;
 
-	create: function() {
-		this.physics.startSystem(Phaser.Physics.P2JS);
-
-		this.resetData();
-		
-		this.add.tileSprite(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT, 'background');
-
-		this.world.setBounds(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT);
-
-		this.loadLevelObjects();
-		this.bobby.create();
-
-		this.cursors = this.input.keyboard.createCursorKeys();
-
-		this.levelOneKey = this.input.keyboard.addKey(Phaser.Keyboard.ONE);
-		this.levelTwoKey = this.input.keyboard.addKey(Phaser.Keyboard.TWO);
-		this.levelOneKey.onDown.add(this.switchToLevelOne);
-		this.levelTwoKey.onDown.add(this.switchToLevelTwo);
-	},
-
-	update: function() {
-		this.physics.arcade.collide(this.bobby.sprite, this.platforms);
-		this.bobby.update();
-
-	},
-
-	render: function() {
-		this.bobby.render();
-	},
-
-	loadLevelAssets: function() {
-		this.load.image('background', 'assets/background.png');
-		this.load.image('platform', 'assets/platform.png');
-	},
-
-	loadLevelObjects: function() {
-
-		this.platforms = this.add.group();
-		this.platforms.enableBody = true;
-
-		var floor = this.platforms.create(0, this.world.height - 64, 'platform');
-		floor.scale.setTo(2, 2);
-		floor.body.immovable = true;	
-	},
-
-	resetData: function() {
-		this.cursors = null;
-		this.platforms = null;
-		this.floor = null;
-	},
-
-	switchToLevelOne: function() {
-		var state = new Level1();
-		game.state.add('level1', state);
-		game.state.start("level1");
-	},
-
-	switchToLevelTwo: function() {
-		var state = new Level2();
-		game.state.add('level2', state);
-		game.state.start("level2");
-	}
+	var floor = this.platforms.create(0, this.world.height - 64, 'platform');
+	floor.scale.setTo(2, 2);
+	floor.body.immovable = true;	
 };
