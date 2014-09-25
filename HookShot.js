@@ -1,5 +1,4 @@
 HookShot = function() {
-	this.velocity = 0;
 }
 
 HookShot.prototype = {
@@ -18,6 +17,10 @@ HookShot.prototype = {
 
 	/**
 	 * Shoot the hookshot from one position to the mouse.
+	 * Arguments are:
+	 * x: The x-coordinate of the target.
+	 * y:  The y-coordinate of the target.
+	 * attache: The object which should be moved to the target.
 	 * Returns the target which was hit.
 	 */
 	shoot: function(x, y, attache) {
