@@ -105,7 +105,7 @@ Character.prototype = {
 		this.sprite = null;
 		this.cursors = null;
 		this.rope = null;
-		this.hookShot = new HookShot();
+		this.hookShot = new HookShot(this.gameplaystate);
 		this.hookShot.preload();
 		this.turned_right = true;
 		this.jumping = null;

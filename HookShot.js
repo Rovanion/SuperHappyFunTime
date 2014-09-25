@@ -1,5 +1,6 @@
-HookShot = function() {
-}
+HookShot = function(gameplaystate) {
+	this.gameplaystate = gameplaystate;
+};
 
 HookShot.prototype = {
 	/**
@@ -27,4 +28,4 @@ HookShot.prototype = {
 		game.physics.arcade.moveToPointer(attache, 500);
 		return null;
 	}
-}
+};
