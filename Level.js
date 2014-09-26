@@ -15,7 +15,7 @@ Level.prototype = {
 		this.physics.startSystem(Phaser.Physics.P2JS);
 
 		this.resetData();
-		
+
 		this.add.tileSprite(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT, 'background');
 
 		this.world.setBounds(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT);
@@ -27,11 +27,16 @@ Level.prototype = {
 
 		this.bobby.create();
 
-		// Switch levels with number keys
-		this.levelOneKey = this.input.keyboard.addKey(Phaser.Keyboard.ONE);
-		this.levelTwoKey = this.input.keyboard.addKey(Phaser.Keyboard.TWO);
-		this.levelOneKey.onDown.add(this.switchToLevelOne);
-		this.levelTwoKey.onDown.add(this.switchToLevelTwo);
+		// Register hooks for the number keys to switch between levels.
+		keynames = [ "", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
+								 "SEVEN", "EIGHT", "NINE", "TEN", "ZERO" ];
+		for ( var n = 1; n <= 10; n++){
+			// The extra anonymous function here exists because of:
+			// http://www.mennovanslooten.nl/blog/post/62
+			switchLevel = ( function(n) { return function () { game.state.start(n); } } )(n);
+			// Equivelant of this.input.keyboard.addKey(49,50, .. ,58)
+			this.input.keyboard.addKey(Phaser.Keyboard[keynames[n]]).onDown.add(switchLevel);
+		}
 	},
 
 	update: function() {
@@ -59,17 +64,5 @@ Level.prototype = {
 		var platform = this.platforms.create(positionx, positiony, 'platform');
 		platform.scale.setTo(width/400, height/32);
 		platform.body.immovable = true;
-	},
-
-	switchToLevelOne: function() {
-		var state = new Level1();
-		game.state.add('level1', state);
-		game.state.start("level1");
-	},
-
-	switchToLevelTwo: function() {
-		var state = new Level2();
-		game.state.add('level2', state);
-		game.state.start("level2");
 	}
 };
