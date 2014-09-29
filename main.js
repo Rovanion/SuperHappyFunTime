@@ -14,7 +14,7 @@ window.onload = function() {
 	 * the level.
 	 */
 	function setupLevels(){
-		game.state.add('1', new Level1());
-		game.state.add('2', new Level2());
+		game.state.add('1', new Playground());
+		game.state.add('2', new Falling());
 	}
 };

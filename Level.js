@@ -40,7 +40,6 @@ Level.prototype = {
 	},
 
 	update: function() {
-		this.physics.arcade.collide(this.bobby.sprite, this.platforms);
 		this.bobby.update();
 
 	},
