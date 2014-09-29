@@ -14,11 +14,25 @@ HookShot.prototype = {
 	create: function() {
 		this.sprite = this.gameState.add.sprite(-100, -100, 'chain');
 		this.gameState.physics.arcade.enable(this.sprite);
+		this.pulling = false;
+		this.leftGround = true;
+		this.PULL_SPEED = 1000;
 	},
 
 	update: function(){
 		this.gameState.physics.arcade.overlap(this.sprite, this.gameState.platforms, this.hit, null, this);
 
+		// Pull the parent toward the goal until reached.
+		if (this.pulling){
+			if(this.parent.sprite.body.touching.none || ! this.leftGround){
+				var angle = game.physics.arcade.angleBetween(this.sprite, this.parent.sprite);
+				this.parent.sprite.body.velocity.x = -this.PULL_SPEED * Math.cos(angle);
+				this.parent.sprite.body.velocity.y = -this.PULL_SPEED * Math.sin(angle);
+				this.leftGround = true;
+			}
+			else
+				this.pulling = false;
+		}
 	},
 
 	/**
@@ -37,7 +51,9 @@ HookShot.prototype = {
 	 * Called once the hook hits something.
 	 */
 	hit: function() {
-		// Go after the hookshot
-		game.physics.arcade.moveToObject(this.parent.sprite, this.sprite, 1000);
+		// Will make the update function pull the parent toward the goal until reached.
+		this.pulling = true;
+		if(this.parent.sprite.body.touching.down)
+			this.leftGround = false;
 	}
 };
