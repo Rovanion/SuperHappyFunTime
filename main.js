@@ -3,6 +3,7 @@ window.onload = function() {
 	game = new Phaser.Game(800, 200, Phaser.AUTO, '', {create: create});
 
 	function create () {
+		cursors = game.input.keyboard.createCursorKeys();
 		setupLevels();
 		game.state.start('1');
 	}

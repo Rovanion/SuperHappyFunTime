@@ -31,8 +31,6 @@ Character.prototype = {
 		this.sprite.animations.add('landLeft', [1], 10);
 		this.sprite.animations.add('landRight', [6], 10);
 
-		this.cursors = this.gameplaystate.input.keyboard.createCursorKeys();
-
 		this.gameplaystate.camera.follow(this.sprite);
 
 		this.rope = new Phaser.Line(this.sprite.position.x, this.sprite.position.y, this.sprite.position.x, this.sprite.position.y);
@@ -44,12 +42,12 @@ Character.prototype = {
 	update: function() {
 		// Walk left and right
 		var accel = 0;
-		if (this.cursors.right.isDown){
+		if (cursors.right.isDown){
 			accel = this.ACCELERATION;
 			this.sprite.animations.play('right');
 			this.turnedRight = true;
 		}
-		else if (this.cursors.left.isDown){
+		else if (cursors.left.isDown){
 			accel = -this.ACCELERATION;
 			this.sprite.animations.play('left');
 			this.turnedRight = false;
@@ -71,7 +69,7 @@ Character.prototype = {
 				this.sprite.body.velocity.x = 0;
 
 			// Stop bobby if he's on the ground and the user doesn't want him to move.
-			if(! this.cursors.left.isDown && ! this.cursors.right.isDown)
+			if(! cursors.left.isDown && ! cursors.right.isDown)
 				this.sprite.body.velocity.x -= this.sprite.body.velocity.x / 5;
 
 			// Landing animation, note that this must be before the jump function.
@@ -84,7 +82,7 @@ Character.prototype = {
 			}
 
 			// Jump bobby, jump!
-			if (this.cursors.up.isDown) {
+			if (cursors.up.isDown) {
 				this.jumping = true;
 				this.turnedWhileJumping = false;
 				this.sprite.body.velocity.y = this.JUMP_ACCELERATION;
@@ -115,7 +113,6 @@ Character.prototype = {
 	resetData: function() {
 		// Jag är osäker på om vi vill sätta sprite osv. till null här. Gör inte det att bobbys sprite försvinner när vi resattar?
 		this.sprite = null;
-		this.cursors = null;
 		this.rope = null;
 		this.hookShot = new HookShot(0, 0);
 		// TODO: Enable this again when images are added to the hookshot.

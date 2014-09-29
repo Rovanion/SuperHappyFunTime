@@ -13,6 +13,7 @@ Level1.prototype.loadLevelObjects = function() {
 
 };
 
+// Overrides the update function from Level to add update events.
 Level1.prototype.update = function() {
 
 	Level.prototype.update.call(this);
@@ -23,7 +24,7 @@ Level1.prototype.update = function() {
 	}
 
 	if (!this.upPressed && cursors.up.isDown) {
-		this.changeText(" ");
+		this.changeText("");
 		this.upPressed = true;
 	}
 

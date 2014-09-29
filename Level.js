@@ -27,8 +27,6 @@ Level.prototype = {
 
 		this.bobby.create();
 
-		cursors = this.input.keyboard.createCursorKeys();
-
 		// Register hooks for the number keys to switch between levels.
 		keynames = [ "", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
 								 "SEVEN", "EIGHT", "NINE", "TEN", "ZERO" ];
@@ -57,7 +55,6 @@ Level.prototype = {
 	},
 
 	resetData: function() {
-		this.cursors = null;
 		this.platforms = null;
 		this.floor = null;
 		this.tutoringText = null;
