@@ -37,8 +37,6 @@ Character.prototype = {
 
 		this.gameplaystate.camera.follow(this.sprite);
 
-		this.rope = new Phaser.Line(this.sprite.position.x, this.sprite.position.y, this.sprite.position.x, this.sprite.position.y);
-
 		this.sprite.checkWorldBounds = true;
 		this.sprite.events.onOutOfBounds.add(this.characterOutsideWorld);
 
@@ -103,28 +101,19 @@ Character.prototype = {
 			}
 		}
 
-		// A guide between bobby and the mouse
-		if (this.turnedRight)
-			this.rope.start.set(this.sprite.position.x + 55, this.sprite.position.y);
-		else
-			this.rope.start.set(this.sprite.position.x + 10, this.sprite.position.y);
-		this.rope.end.set(this.gameplaystate.input.mousePointer.worldX, this.gameplaystate.input.mousePointer.worldY);
-
-
 		// Fire ze hookshot!
 		if(game.input.activePointer.isDown)
 			this.hookShot.shoot();
 	},
 
 	render: function() {
-		game.debug.geom(this.rope, '#4c4c33');
+
 	},
 
 	resetData: function() {
 		// Jag är osäker på om vi vill sätta sprite osv. till null här. Gör inte det att bobbys sprite försvinner när vi resattar?
 		this.sprite = null;
 		this.cursors = null;
-		this.rope = null;
 		this.turnedRight = false;
 		this.jumping = true;
 
