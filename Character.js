@@ -10,8 +10,9 @@ Character.prototype = {
 		this.INITIAL_POSITION_X = 32;
 		this.INITIAL_POSITION_Y = 0;
 		this.GRAVITY = 500;
-		this.ACCELERATION = 60;
+		this.ACCELERATION = 50;
 		this.JUMP_ACCELERATION = -250;
+		this.MAX_SPEED = 500;
 	},
 
 	create: function() {
@@ -41,26 +42,37 @@ Character.prototype = {
 	},
 
 	update: function() {
-		// Deaccelerate bobby by friction if he's on the ground
-		if(this.sprite.body.touching.down){
-			if(isNaN(this.sprite.body.velocity.x)) {
-				this.sprite.body.velocity.x = 0;
-			}
-			else{
-				this.sprite.body.velocity.x = this.sprite.body.velocity.x / 1.25;
-			}
+		// Walk left and right
+		var accel = 0;
+		if (this.cursors.right.isDown){
+			accel = this.ACCELERATION;
+			this.sprite.animations.play('right');
+			this.turnedRight = true;
+		}
+		else if (this.cursors.left.isDown){
+			accel = -this.ACCELERATION;
+			this.sprite.animations.play('left');
+			this.turnedRight = false;
+		}
 
-			// Walk left and right
-			if (this.cursors.right.isDown) {
-				this.sprite.body.velocity.x += this.ACCELERATION;
-				this.sprite.animations.play('right');
-				this.turned_right = true;
-			}
-			else if (this.cursors.left.isDown) {
-				this.sprite.body.velocity.x += -this.ACCELERATION;
-				this.sprite.animations.play('left');
-				this.turned_right = false;
-			}
+		if(this.sprite.body.touching.down)
+			this.sprite.body.velocity.x += accel;
+		else
+			this.sprite.body.velocity.x += accel / 2;
+
+		// Enforce the max speed
+		if(this.sprite.body.velocity.x >= this.MAX_SPEED)
+			this.sprite.body.velocity.x = this.MAX_SPEED;
+		else if(this.sprite.body.velocity.x <= -this.MAX_SPEED)
+			this.sprite.body.velocity.x = -this.MAX_SPEED;
+
+		if(this.sprite.body.touching.down){
+			if(isNaN(this.sprite.body.velocity.x))
+				this.sprite.body.velocity.x = 0;
+
+			// Stop bobby if he's on the ground and the user doesn't want him to move.
+			if(! this.cursors.left.isDown && ! this.cursors.right.isDown)
+				this.sprite.body.velocity.x -= this.sprite.body.velocity.x / 5;
 
 			// Landing animation, note that this must be before the jump function.
 			if(this.jumping){
@@ -74,17 +86,17 @@ Character.prototype = {
 			// Jump bobby, jump!
 			if (this.cursors.up.isDown) {
 				this.jumping = true;
+				this.turnedWhileJumping = false;
 				this.sprite.body.velocity.y = this.JUMP_ACCELERATION;
 				if(this.sprite.body.velocity.x > 0)
 					this.sprite.animations.play('jumpRight');
 				else
 					this.sprite.animations.play('jumpLeft');
 			}
-
 		}
 
 		// A guide between bobby and the mouse
-		if (this.turned_right)
+		if (this.turnedRight)
 			this.rope.start.set(this.sprite.position.x + 55, this.sprite.position.y);
 		else
 			this.rope.start.set(this.sprite.position.x + 10, this.sprite.position.y);
@@ -105,9 +117,10 @@ Character.prototype = {
 		this.sprite = null;
 		this.cursors = null;
 		this.rope = null;
-		this.hookShot = new HookShot(this.gameplaystate);
-		this.hookShot.preload();
-		this.turned_right = true;
+		this.hookShot = new HookShot(0, 0);
+		// TODO: Enable this again when images are added to the hookshot.
+		//this.hookShot.preload();
+		this.turnedRight = true;
 		this.jumping = null;
 
 	},
