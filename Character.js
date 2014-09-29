@@ -13,6 +13,8 @@ Character.prototype = {
 		this.ACCELERATION = 50;
 		this.JUMP_ACCELERATION = -250;
 		this.MAX_SPEED = 500;
+		this.hookShot = new HookShot(this.gameplaystate, this);
+		this.hookShot.preload();
 	},
 
 	create: function() {
@@ -39,9 +41,15 @@ Character.prototype = {
 
 		this.sprite.checkWorldBounds = true;
 		this.sprite.events.onOutOfBounds.add(this.characterOutsideWorld);
+
+		this.hookShot.create();
 	},
 
 	update: function() {
+		// Do physics-y things first
+		this.gameplaystate.physics.arcade.collide(this.sprite, this.gameplaystate.platforms);
+		this.hookShot.update();
+
 		// Walk left and right
 		var accel = 0;
 		if (this.cursors.right.isDown){
@@ -105,7 +113,7 @@ Character.prototype = {
 
 		// Fire ze hookshot!
 		if(game.input.activePointer.isDown)
-			this.hookShot.shoot(this.sprite.x, this.sprite.y, this.sprite);
+			this.hookShot.shoot();
 	},
 
 	render: function() {
@@ -117,11 +125,8 @@ Character.prototype = {
 		this.sprite = null;
 		this.cursors = null;
 		this.rope = null;
-		this.hookShot = new HookShot(0, 0);
-		// TODO: Enable this again when images are added to the hookshot.
-		//this.hookShot.preload();
-		this.turnedRight = true;
-		this.jumping = null;
+		this.turnedRight = false;
+		this.jumping = true;
 
 	},
 
