@@ -1,27 +1,28 @@
-Character = function(gameplaystate) {
-	this.gameplaystate = gameplaystate;
+Character = function(gameState) {
+	this.gameState = gameState;
 };
 
 Character.prototype = {
 
 	preload: function() {
-		this.gameplaystate.load.spritesheet('character', 'assets/character_sprite_sheet.png', 64, 79);
+		this.gameState.load.spritesheet('character', 'assets/character_sprite_sheet.png', 64, 79);
 
-		this.INITIAL_POSITION_X = 32;
-		this.INITIAL_POSITION_Y = 0;
-		this.GRAVITY = 500;
+		this.GRAVITY = 800;
 		this.ACCELERATION = 50;
-		this.JUMP_ACCELERATION = -250;
+		this.JUMP_ACCELERATION = -350;
 		this.MAX_SPEED = 500;
-		this.hookShot = new HookShot(this.gameplaystate, this);
+		this.hookShot = new HookShot(this.gameState, this);
 		this.hookShot.preload();
 	},
 
-	create: function() {
+	/**
+	 * The initial position of the Character in world coordinates.
+	 */
+	create: function(x, y) {
 		this.resetData();
 
-		this.sprite = this.gameplaystate.add.sprite(this.INITIAL_POSITION_X, this.INITIAL_POSITION_Y, 'character');
-		this.gameplaystate.physics.arcade.enable(this.sprite);
+		this.sprite = this.gameState.add.sprite(x, y, 'character');
+		this.gameState.physics.arcade.enable(this.sprite);
 		this.sprite.body.gravity.y = this.GRAVITY;
 		this.sprite.anchor.setTo(0.5, 0.5);
 
@@ -33,9 +34,9 @@ Character.prototype = {
 		this.sprite.animations.add('landLeft', [1], 10);
 		this.sprite.animations.add('landRight', [6], 10);
 
-		this.cursors = this.gameplaystate.input.keyboard.createCursorKeys();
+		this.cursors = this.gameState.input.keyboard.createCursorKeys();
 
-		this.gameplaystate.camera.follow(this.sprite);
+		this.gameState.camera.follow(this.sprite);
 
 		this.sprite.checkWorldBounds = true;
 		this.sprite.events.onOutOfBounds.add(this.characterOutsideWorld);
@@ -45,7 +46,7 @@ Character.prototype = {
 
 	update: function() {
 		// Do physics-y things first
-		this.gameplaystate.physics.arcade.collide(this.sprite, this.gameplaystate.platforms);
+		this.gameState.physics.arcade.collide(this.sprite, this.gameState.platforms);
 		this.hookShot.update();
 
 		// Walk left and right
@@ -71,6 +72,8 @@ Character.prototype = {
 			this.sprite.body.velocity.x = this.MAX_SPEED;
 		else if(this.sprite.body.velocity.x <= -this.MAX_SPEED)
 			this.sprite.body.velocity.x = -this.MAX_SPEED;
+		if(this.sprite.body.velocity.y <= -this.MAX_SPEED)
+			this.sprite.body.velocity.y = -this.MAX_SPEED;
 
 		if(this.sprite.body.touching.down){
 			if(isNaN(this.sprite.body.velocity.x))
@@ -107,7 +110,6 @@ Character.prototype = {
 	},
 
 	render: function() {
-
 	},
 
 	resetData: function() {
