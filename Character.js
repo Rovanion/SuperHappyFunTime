@@ -10,8 +10,9 @@ Character.prototype = {
 		this.INITIAL_POSITION_X = 32;
 		this.INITIAL_POSITION_Y = 0;
 		this.GRAVITY = 500;
-		this.ACCELERATION = 60;
+		this.ACCELERATION = 50;
 		this.JUMP_ACCELERATION = -250;
+		this.MAX_SPEED = 500;
 	},
 
 	create: function() {
@@ -46,33 +47,32 @@ Character.prototype = {
 		if (this.cursors.right.isDown){
 			accel = this.ACCELERATION;
 			this.sprite.animations.play('right');
-			this.turned_right = true;
+			this.turnedRight = true;
 		}
 		else if (this.cursors.left.isDown){
 			accel = -this.ACCELERATION;
 			this.sprite.animations.play('left');
-			this.turned_right = false;
+			this.turnedRight = false;
 		}
 
 		if(this.sprite.body.touching.down)
 			this.sprite.body.velocity.x += accel;
-		else{
-			if(this.turnedWhileJumping)
-				this.sprite.body.velocity.x += accel / 10;
-			else{
-				this.turnedWhileJumping = true;
-				this.sprite.body.velocity.x += accel * 10;
-			}
-		}
+		else
+			this.sprite.body.velocity.x += accel / 2;
 
-		// Deaccelerate bobby by friction if he's on the ground
+		// Enforce the max speed
+		if(this.sprite.body.velocity.x >= this.MAX_SPEED)
+			this.sprite.body.velocity.x = this.MAX_SPEED;
+		else if(this.sprite.body.velocity.x <= -this.MAX_SPEED)
+			this.sprite.body.velocity.x = -this.MAX_SPEED;
+
 		if(this.sprite.body.touching.down){
-			if(isNaN(this.sprite.body.velocity.x)) {
+			if(isNaN(this.sprite.body.velocity.x))
 				this.sprite.body.velocity.x = 0;
-			}
-			else{
-				this.sprite.body.velocity.x = this.sprite.body.velocity.x / 1.25;
-			}
+
+			// Stop bobby if he's on the ground and the user doesn't want him to move.
+			if(! this.cursors.left.isDown && ! this.cursors.right.isDown)
+				this.sprite.body.velocity.x -= this.sprite.body.velocity.x / 5;
 
 			// Landing animation, note that this must be before the jump function.
 			if(this.jumping){
@@ -96,7 +96,7 @@ Character.prototype = {
 		}
 
 		// A guide between bobby and the mouse
-		if (this.turned_right)
+		if (this.turnedRight)
 			this.rope.start.set(this.sprite.position.x + 55, this.sprite.position.y);
 		else
 			this.rope.start.set(this.sprite.position.x + 10, this.sprite.position.y);
@@ -120,7 +120,7 @@ Character.prototype = {
 		this.hookShot = new HookShot(0, 0);
 		// TODO: Enable this again when images are added to the hookshot.
 		//this.hookShot.preload();
-		this.turned_right = true;
+		this.turnedRight = true;
 		this.jumping = null;
 
 	},
