@@ -7,19 +7,24 @@ Level.prototype = {
 	characterStartX: 60,
 	characterStartY: 150,
 	platforms: null,
+	counter: 0,
+	counterText: null,
 
 	preload: function() {
 		this.loadAssets();
 
 		this.bobby = new Character(this);
 		this.bobby.preload();
+
 	},
 
 	create: function() {
+		counter = 0;
+
 		this.physics.startSystem(Phaser.Physics.Arcade);
 		this.add.tileSprite(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT, 'background');
 		this.world.setBounds(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT);
-		this.platforms = this.add.group()
+		this.platforms = this.add.group();
 		this.platforms.enableBody = true;
 
 		this.loadLevelObjects();
@@ -36,6 +41,15 @@ Level.prototype = {
 			// Equivelant of this.input.keyboard.addKey(49,50, .. ,58)
 			this.input.keyboard.addKey(Phaser.Keyboard[keynames[n]]).onDown.add(switchLevel);
 		}
+
+		// Adds a text in the top right corner showing the time.
+		counterText = this.add.text(0, 0, 'Time: 0', {font: "30px Arial", fill: "#000000", align: "left"});
+		// The texts position is relative to the cameras.
+		counterText.fixedToCamera = true;
+		counterText.cameraOffset.setTo(game.width - 140, game.height - 570);
+
+
+		this.time.events.loop(Phaser.Timer.SECOND, this.updateCounter, this);
 	},
 
 	update: function() {
@@ -64,5 +78,11 @@ Level.prototype = {
 		var platform = this.platforms.create(x, y, 'platform');
 		platform.scale.setTo(width/400, height/32);
 		platform.body.immovable = true;
+	},
+
+	updateCounter: function() {
+		counter++;
+
+		counterText.setText('Time: ' + counter);
 	}
 };
