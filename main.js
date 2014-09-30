@@ -4,7 +4,7 @@ window.onload = function() {
 
 	function create () {
 		setupLevels();
-		game.state.start('2');
+		game.state.start('startMenu');
 	}
 
 	/**
@@ -16,5 +16,6 @@ window.onload = function() {
 	function setupLevels(){
 		game.state.add('1', new Playground());
 		game.state.add('2', new Falling());
+		game.state.add('startMenu', new StartMenu());
 	}
 };
