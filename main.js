@@ -1,10 +1,10 @@
 window.onload = function() {
 
-	game = new Phaser.Game(800, 200, Phaser.AUTO, '', {create: create});
+	game = new Phaser.Game(800, 600, Phaser.AUTO, '', {create: create});
 
 	function create () {
 		setupLevels();
-		game.state.start('1');
+		game.state.start('2');
 	}
 
 	/**
@@ -14,7 +14,7 @@ window.onload = function() {
 	 * the level.
 	 */
 	function setupLevels(){
-		game.state.add('1', new Level1());
-		game.state.add('2', new Level2());
+		game.state.add('1', new Playground());
+		game.state.add('2', new Falling());
 	}
 };

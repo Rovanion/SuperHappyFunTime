@@ -4,6 +4,10 @@ Level = function(width, height) {
 };
 
 Level.prototype = {
+	characterStartX: 60,
+	characterStartY: 150,
+	platforms: null,
+
 	preload: function() {
 		this.loadAssets();
 
@@ -12,20 +16,15 @@ Level.prototype = {
 	},
 
 	create: function() {
-		this.physics.startSystem(Phaser.Physics.P2JS);
-
-		this.resetData();
-
+		this.physics.startSystem(Phaser.Physics.Arcade);
 		this.add.tileSprite(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT, 'background');
-
 		this.world.setBounds(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT);
-
-		this.platforms = this.add.group();
+		this.platforms = this.add.group()
 		this.platforms.enableBody = true;
 
 		this.loadLevelObjects();
 
-		this.bobby.create();
+		this.bobby.create(this.characterStartX, this.characterStartY);
 
 		// Register hooks for the number keys to switch between levels.
 		keynames = [ "", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
@@ -40,7 +39,6 @@ Level.prototype = {
 	},
 
 	update: function() {
-		this.physics.arcade.collide(this.bobby.sprite, this.platforms);
 		this.bobby.update();
 
 	},
@@ -54,14 +52,16 @@ Level.prototype = {
 		this.load.image('platform', 'assets/platform.png');
 	},
 
-	resetData: function() {
-		this.cursors = null;
-		this.platforms = null;
-		this.floor = null;
-	},
-
-	addPlatform: function(positionx, positiony, width, height) {
-		var platform = this.platforms.create(positionx, positiony, 'platform');
+	/**
+	 * Adds a platform to the level.
+	 * Arguments, all in pixels:
+	 * x: The horizontal coordinate from the left edge.
+	 * y: The vertical coordinate from the top edge.
+	 * width: The horizontal width of the platform.
+	 * height: The vertical height of the platform.
+	 */
+	addPlatform: function(x, y, width, height) {
+		var platform = this.platforms.create(x, y, 'platform');
 		platform.scale.setTo(width/400, height/32);
 		platform.body.immovable = true;
 	}
