@@ -19,28 +19,21 @@ HookShot.prototype = {
 		this.PULL_SPEED = 1000;
 	},
 
-	update: function(){
-		this.gameState.physics.arcade.overlap(this.sprite, this.gameState.platforms, this.hit, null, this);
+	update: function() {
+		this.gameState.physics.arcade.collide(this.sprite, this.gameState.platforms, this.hit, null, this);
+		this.gameState.physics.arcade.overlap(this.sprite, this.parent.sprite, this.reachedTarget, null, this);
 
 		// Pull the parent toward the goal until reached.
 		if (this.pulling){
-			if(this.parent.sprite.body.touching.none || ! this.leftGround){
 				var angle = game.physics.arcade.angleBetween(this.sprite, this.parent.sprite);
 				this.parent.sprite.body.velocity.x = -this.PULL_SPEED * Math.cos(angle);
 				this.parent.sprite.body.velocity.y = -this.PULL_SPEED * Math.sin(angle);
 				this.leftGround = true;
-			}
-			else
-				this.pulling = false;
 		}
 	},
 
 	/**
 	 * Shoot the hookshot from one position to the mouse.
-	 * Arguments are:
-	 * x: The x-coordinate of the target.
-	 * y: The y-coordinate of the target.
-	 * attache: The object which should be moved to the target.
 	 */
 	shoot: function() {
 		this.sprite.reset(this.parent.sprite.x, this.parent.sprite.y);
@@ -51,9 +44,18 @@ HookShot.prototype = {
 	 * Called once the hook hits something.
 	 */
 	hit: function() {
+		this.sprite.body.velocity.x =	this.sprite.body.velocity.y = 0;
+
 		// Will make the update function pull the parent toward the goal until reached.
 		this.pulling = true;
 		if(this.parent.sprite.body.touching.down)
 			this.leftGround = false;
+	},
+
+	/**
+	 * Called once the parent has reached the end of the hookshot.
+	 */
+	reachedTarget: function() {
+		this.pulling = false;
 	}
 };
