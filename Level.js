@@ -67,7 +67,7 @@ Level.prototype = {
 	},
 
 	addText: function(positionx, positiony, text) {
-		var style = {font: "30px Arial", fill: "ffffff", align: "center"};
+		var style = {font: "26px Verdana", fill: "ffffff", align: "center"};
 		this.tutoringText = this.add.text(positionx, positiony, text, style);
 	},
 
