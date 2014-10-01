@@ -107,9 +107,7 @@ Character.prototype = {
 		// Shoot on mouseDown, cancel on mouseUp
 		if(game.input.activePointer.isDown)
 			this.hookShot.shoot();
-		else if(game.input.activePointer.isUp && this.hookShot.shooting)
-			this.hookShot.cancelHook();
-		else if(game.input.activePointer.isUp && this.hookShot.pulling)
+		else if(game.input.activePointer.isUp && this.hookShot.shooting || this.hookShot.pulling)
 			this.hookShot.cancelHook();
 	},
 

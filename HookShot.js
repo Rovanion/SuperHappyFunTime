@@ -32,7 +32,6 @@ HookShot.prototype = {
 		this.hook.addChild(this.chain);
 		this.chain.anchor.setTo(1, 0.5);
 		this.chain.z = 0;
-		console.debug(this.hook);
 	},
 
 	update: function() {
@@ -82,7 +81,6 @@ HookShot.prototype = {
 			setTimeout(function() {
 				that.cooldown = false
 			}, 1000);
-			console.debug(this);
 		}
 	},
 
@@ -105,9 +103,15 @@ HookShot.prototype = {
 		this.hook.kill();
 	},
 
+	/**
+	 * Pull back the hook from any situation cancelling both shooting it out and
+	 * the parent being pulled to the target of the hook.
+	 */
 	cancelHook: function() {
-		this.shooting = this.pulling = false;
-		this.cancelling = true;
-		game.physics.arcade.moveToObject(this.hook, this.parent.sprite, 1500);
+		if(!this.cancelling) {
+			this.shooting = this.pulling = false;
+			this.cancelling = true;
+			game.physics.arcade.moveToObject(this.hook, this.parent.sprite, 1500);
+		}
 	}
 };
