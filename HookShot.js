@@ -54,7 +54,7 @@ HookShot.prototype = {
 		}
 		else if(this.cancelling){
 			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent.sprite);
-			if(Phaser.Math.fuzzyEqual(distance, 0, 20)){
+			if(Phaser.Math.fuzzyEqual(distance, 0, 20)) {
 				this.hook.kill();
 				this.cancelling = false;
 
@@ -64,6 +64,9 @@ HookShot.prototype = {
 					that.cooldown = false
 				}, this.cooldownLength);
 			}
+			var angle = game.physics.arcade.angleBetween(this.hook, this.parent.sprite);
+			this.hook.body.velocity.x = this.speed * Math.cos(angle);
+			this.hook.body.velocity.y = this.speed * Math.sin(angle);
 		}
 		else
 			return;
