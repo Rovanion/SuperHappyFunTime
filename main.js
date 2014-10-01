@@ -1,6 +1,6 @@
 window.onload = function() {
 
-	game = new Phaser.Game(800, 300, Phaser.AUTO, '', {create: create});
+	game = new Phaser.Game(800, 600, Phaser.AUTO, '', {create: create});
 
 	function create () {
 		cursors = game.input.keyboard.createCursorKeys();
