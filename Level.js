@@ -80,6 +80,15 @@ Level.prototype = {
 		platform.body.immovable = true;
 	},
 
+	addText: function(positionx, positiony, text) {
+		var style = {font: "26px Verdana", fill: "ffffff", align: "center"};
+		this.tutoringText = this.add.text(positionx, positiony, text, style);
+	},
+
+	changeText: function(text) {
+		this.tutoringText.setText(text);
+	},
+
 	updateCounter: function() {
 		counter++;
 

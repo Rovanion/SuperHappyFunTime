@@ -17,8 +17,8 @@ Falling.prototype.loadLevelObjects = function() {
 	// The start platform
 	this.addPlatform(0, 150, 200, 800);
 	// The wall infront
-	this.addPlatform(400, 0, 200, 400);
-	this.addPlatform(350, 0, 200, 200);
+	this.addPlatform(600, 0, 200, 350);
+	this.addPlatform(550, 0, 200, 200);
 	// Second floor
 	this.addPlatform(200, 300, 100, 500);
 	// Third floor
@@ -29,4 +29,23 @@ Falling.prototype.loadLevelObjects = function() {
 	this.addPlatform(800, 450, 200, 200);
 	// Another roof
 	this.addPlatform(600, 0, 400, 200);
+
+	// The tutoring part
+	this.addText(30, 30, "Press left and right arrows to move");
+	this.leftRightPressed = false;
+	this.upPressed = false;
+};
+
+
+// Overrides the update function from Level to add update events.
+Falling.prototype.update = function() {
+	Level.prototype.update.call(this);
+	if (!this.leftRightPressed && (cursors.right.isDown || cursors.left.isDown)) {
+		this.changeText("Press arrow up to jump");
+		this.leftRightPressed = true;
+	}
+	if (!this.upPressed && cursors.up.isDown) {
+		this.changeText("");
+		this.upPressed = true;
+	}
 };
