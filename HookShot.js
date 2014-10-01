@@ -12,6 +12,8 @@ HookShot.prototype = {
 	cancelling: false,
 	// The hook can only be shot so often
 	cooldown: false,
+	// Defining the length of the cooldown
+	cooldownLength: 500,
 	// The speed at which the hook draws the character towards its target.
 	speed: 1000,
 
@@ -46,17 +48,21 @@ HookShot.prototype = {
 				this.cancelHook();
 		}
 		else if(this.pulling){
-			this.gameState.physics.arcade.overlap(
-				this.hook, this.parent.sprite, this.reachedTarget, null, this);
 			var angle = game.physics.arcade.angleBetween(this.hook, this.parent.sprite);
 			this.parent.sprite.body.velocity.x = -this.speed * Math.cos(angle);
 			this.parent.sprite.body.velocity.y = -this.speed * Math.sin(angle);
 		}
 		else if(this.cancelling){
 			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent.sprite);
-			if(Phaser.Math.fuzzyEqual(distance, 0, 10)){
+			if(Phaser.Math.fuzzyEqual(distance, 0, 20)){
 				this.hook.kill();
 				this.cancelling = false;
+
+				// The cooldown runs out in 2 seconds.
+				var that = this;
+				setTimeout(function() {
+					that.cooldown = false
+				}, this.cooldownLength);
 			}
 		}
 		else
@@ -73,14 +79,8 @@ HookShot.prototype = {
 	shoot: function() {
 		if( !this.shooting && !this.pulling && !this.cancelling && !this.cooldown ){
 			this.hook.reset(this.parent.sprite.x, this.parent.sprite.y);
-			this.hook.rotation = game.physics.arcade.moveToPointer(this.hook, this.speed, game.input.activePointer, 500);
-
+			this.hook.rotation = game.physics.arcade.moveToPointer(this.hook, this.speed, game.input.activePointer);
 			this.shooting = this.cooldown = true;
-			// The cooldown runs out in 2 seconds.
-			var that = this;
-			setTimeout(function() {
-				that.cooldown = false
-			}, 1000);
 		}
 	},
 
@@ -93,14 +93,6 @@ HookShot.prototype = {
 		// Will make the update function pull the parent toward the goal until reached.
 		this.pulling = true;
 		this.shooting = false;
-	},
-
-	/**
-	 * Called once the parent has reached the end of the hookshot.
-	 */
-	reachedTarget: function() {
-		this.pulling = false;
-		this.hook.kill();
 	},
 
 	/**
