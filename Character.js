@@ -51,12 +51,12 @@ Character.prototype = {
 
 		// Walk left and right
 		var accel = 0;
-		if (this.cursors.right.isDown){
+		if (cursors.right.isDown){
 			accel = this.ACCELERATION;
 			this.sprite.animations.play('right');
 			this.turnedRight = true;
 		}
-		else if (this.cursors.left.isDown){
+		else if (cursors.left.isDown){
 			accel = -this.ACCELERATION;
 			this.sprite.animations.play('left');
 			this.turnedRight = false;
@@ -80,7 +80,7 @@ Character.prototype = {
 				this.sprite.body.velocity.x = 0;
 
 			// Stop bobby if he's on the ground and the user doesn't want him to move.
-			if(! this.cursors.left.isDown && ! this.cursors.right.isDown)
+			if(! cursors.left.isDown && ! cursors.right.isDown)
 				this.sprite.body.velocity.x -= this.sprite.body.velocity.x / 5;
 
 			// Landing animation, note that this must be before the jump function.
@@ -93,7 +93,7 @@ Character.prototype = {
 			}
 
 			// Jump bobby, jump!
-			if (this.cursors.up.isDown) {
+			if (cursors.up.isDown) {
 				this.jumping = true;
 				this.turnedWhileJumping = false;
 				this.sprite.body.velocity.y = this.JUMP_ACCELERATION;
