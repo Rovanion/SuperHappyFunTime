@@ -104,9 +104,13 @@ Character.prototype = {
 			}
 		}
 
-		// Fire ze hookshot!
+		// Shoot on mouseDown, cancel on mouseUp
 		if(game.input.activePointer.isDown)
 			this.hookShot.shoot();
+		else if(game.input.activePointer.isUp && this.hookShot.shooting)
+			this.hookShot.cancelHook();
+		else if(game.input.activePointer.isUp && this.hookShot.pulling)
+			this.hookShot.cancelHook();
 	},
 
 	render: function() {
