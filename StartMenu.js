@@ -15,6 +15,7 @@ StartMenu.prototype = {
 		this.cursors = this.input.keyboard.createCursorKeys();
 		this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
+		this.updateTextColor();
 	},
 
 	update: function() {
@@ -29,18 +30,12 @@ StartMenu.prototype = {
 				this.choice = 2;
 			else
 			this.choice--;
+			this.updateTextColor();
 		}
 		else if (this.cursors.down.justPressed(1)) {
 			this.choice++;
 			this.choice = this.choice % 3;
-		}
-
-		for (var i = 0; i < this.choices.length; i++) {
-			if (this.choice === i) {
-				this.choices[i].fill = "#ff6789";
-			} else {
-				this.choices[i].fill = "#ffffff";
-			}
+			this.updateTextColor();
 		}
 
 	},
@@ -70,7 +65,13 @@ StartMenu.prototype = {
 		}
 	},
 
-	onEnterPressed: function() {
-
+	updateTextColor: function() {
+		for (var i = 0; i < this.choices.length; i++) {
+			if (this.choice === i) {
+				this.choices[i].fill = "#ff6789";
+			} else {
+				this.choices[i].fill = "#ffffff";
+			}
+		}
 	}
 };
