@@ -4,56 +4,106 @@ HookShot = function(gameState, parent) {
 };
 
 HookShot.prototype = {
+	// Wether or not the hookshot is shooting out or not.
+	shooting: false,
+	// Wether or not the hookshot is pulling the player in or not.
+	pulling: false,
+	// Set when pulling back a failing hook.
+	cancelling: false,
+	// The hook can only be shot so often
+	cooldown: false,
+	// Defining the length of the cooldown
+	cooldownLength: 500,
+	// The speed at which the hook draws the character towards its target.
+	speed: 1000,
+
 	/**
 	 * Function which should be called before the class is used in order to load it's assets
 	 */
 	preload: function() {
-		this.gameState.load.image('chain', 'assets/chain.png', 64, 79);
+		this.gameState.load.image('hook', 'assets/hook.png');
+		this.gameState.load.image('chain', 'assets/chain.png');
 	},
 
 	create: function() {
-		this.sprite = this.gameState.add.sprite(-100, -100, 'chain');
-		this.gameState.physics.arcade.enable(this.sprite);
-		this.pulling = false;
-		this.leftGround = true;
-		this.PULL_SPEED = 1000;
+		this.hook = this.gameState.add.sprite(-100, -100, 'hook');
+		this.gameState.physics.arcade.enable(this.hook);
+		this.hook.anchor.setTo(0.1, 0.5);
+
+		this.chain = this.gameState.add.sprite(0, 0, 'chain');
+		this.hook.addChild(this.chain);
+		this.chain.anchor.setTo(1, 0.5);
+		this.chain.z = 0;
 	},
 
-	update: function(){
-		this.gameState.physics.arcade.overlap(this.sprite, this.gameState.platforms, this.hit, null, this);
+	update: function() {
+		// We're either shooting the hook, pulling the character towards a target,
+		// cancelling a failed shot or doing nothing.
+		if(this.shooting){
+			this.gameState.physics.arcade.collide(
+				this.hook, this.gameState.platforms, this.hit, null, this);
+			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent.sprite);
 
-		// Pull the parent toward the goal until reached.
-		if (this.pulling){
-			if(this.parent.sprite.body.touching.none || ! this.leftGround){
-				var angle = game.physics.arcade.angleBetween(this.sprite, this.parent.sprite);
-				this.parent.sprite.body.velocity.x = -this.PULL_SPEED * Math.cos(angle);
-				this.parent.sprite.body.velocity.y = -this.PULL_SPEED * Math.sin(angle);
-				this.leftGround = true;
-			}
-			else
-				this.pulling = false;
+			if (distance > 500)
+				this.cancelHook();
 		}
+		else if(this.pulling){
+			var angle = game.physics.arcade.angleBetween(this.hook, this.parent.sprite);
+			this.parent.sprite.body.velocity.x = -this.speed * Math.cos(angle);
+			this.parent.sprite.body.velocity.y = -this.speed * Math.sin(angle);
+		}
+		else if(this.cancelling){
+			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent.sprite);
+			if(Phaser.Math.fuzzyEqual(distance, 0, 20)){
+				this.hook.kill();
+				this.cancelling = false;
+
+				// The cooldown runs out in 2 seconds.
+				var that = this;
+				setTimeout(function() {
+					that.cooldown = false
+				}, this.cooldownLength);
+			}
+		}
+		else
+			return;
+
+		this.hook.angle = 180 + Phaser.Math.radToDeg(
+			game.physics.arcade.angleBetween(this.hook, this.parent.sprite));
+
 	},
 
 	/**
 	 * Shoot the hookshot from one position to the mouse.
-	 * Arguments are:
-	 * x: The x-coordinate of the target.
-	 * y: The y-coordinate of the target.
-	 * attache: The object which should be moved to the target.
 	 */
 	shoot: function() {
-		this.sprite.reset(this.parent.sprite.x, this.parent.sprite.y);
-		this.sprite.rotation = game.physics.arcade.moveToPointer(this.sprite, 1000, game.input.activePointer, 500);
+		if( !this.shooting && !this.pulling && !this.cancelling && !this.cooldown ){
+			this.hook.reset(this.parent.sprite.x, this.parent.sprite.y);
+			this.hook.rotation = game.physics.arcade.moveToPointer(this.hook, this.speed, game.input.activePointer);
+			this.shooting = this.cooldown = true;
+		}
 	},
 
 	/**
 	 * Called once the hook hits something.
 	 */
 	hit: function() {
+		this.hook.body.velocity.x =	this.hook.body.velocity.y = 0;
+
 		// Will make the update function pull the parent toward the goal until reached.
 		this.pulling = true;
-		if(this.parent.sprite.body.touching.down)
-			this.leftGround = false;
+		this.shooting = false;
+	},
+
+	/**
+	 * Pull back the hook from any situation cancelling both shooting it out and
+	 * the parent being pulled to the target of the hook.
+	 */
+	cancelHook: function() {
+		if(!this.cancelling) {
+			this.shooting = this.pulling = false;
+			this.cancelling = true;
+			game.physics.arcade.moveToObject(this.hook, this.parent.sprite, 1500);
+		}
 	}
 };
