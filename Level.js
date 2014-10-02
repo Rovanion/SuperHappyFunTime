@@ -43,10 +43,9 @@ Level.prototype = {
 		}
 
 		// Adds a text in the top right corner showing the time.
-		counterText = this.add.text(0, 0, 'Time: 0', {font: "30px Arial", fill: "#000000", align: "left"});
+		counterText = this.add.text(10, 5, 'Time: 0', {font: "26px Verdana", fill: "#000000", align: "left"});
 		// The texts position is relative to the cameras.
 		counterText.fixedToCamera = true;
-		counterText.cameraOffset.setTo(game.width - 140, game.height - 570);
 
 
 		this.time.events.loop(Phaser.Timer.SECOND, this.updateCounter, this);
