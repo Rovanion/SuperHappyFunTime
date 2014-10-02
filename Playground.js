@@ -11,6 +11,6 @@ Playground.prototype = new Level(1600, 600);
 Playground.prototype.loadLevelObjects = function() {
 
 	this.addPlatform(0, this.world.height - 64, 350, 64);
-	this.addPlatform(300, 350, 800, 64);
-	this.addPlatform(500, this.world.height - 64, 400, 64);
+	this.addPlatform(300, 300, 800, 64);
+	this.addPlatform(600, this.world.height - 64, 400, 64);
 };

@@ -109,6 +109,17 @@ Character.prototype = {
 			this.hookShot.shoot();
 		else if(game.input.activePointer.isUp && this.hookShot.shooting || this.hookShot.pulling)
 			this.hookShot.cancelHook();
+
+		var angle = Phaser.Math.radToDeg(game.physics.arcade.angleToPointer(this.sprite));
+		if(angle > 90 || angle < -90){
+			this.sprite.animations.frame = 1;
+			this.sprite.angle = 180 + angle;
+		}
+		else{
+			this.sprite.animations.frame = 6;
+			this.sprite.angle = angle;
+		}
+
 	},
 
 	render: function() {

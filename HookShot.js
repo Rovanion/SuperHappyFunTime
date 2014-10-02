@@ -44,7 +44,7 @@ HookShot.prototype = {
 				this.hook, this.gameState.platforms, this.hit, null, this);
 			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent.sprite);
 
-			if (distance > 500)
+			if (distance > 400)
 				this.cancelHook();
 		}
 		else if(this.pulling){
@@ -54,7 +54,7 @@ HookShot.prototype = {
 		}
 		else if(this.cancelling){
 			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent.sprite);
-			if(Phaser.Math.fuzzyEqual(distance, 0, 20)) {
+			if(Phaser.Math.fuzzyEqual(distance, 0, 50)) {
 				this.hook.kill();
 				this.cancelling = false;
 
