@@ -4,8 +4,11 @@ Character = function(gameState) {
 
 Character.prototype = {
 
-	preload: function() {
-		this.gameState.load.spritesheet('character', 'assets/character_sprite_sheet.png', 64, 79);
+	preload : function() {
+		this.gameState.load.spritesheet('torso',
+			'assets/character_spritesheet_body.png', 64, 64);
+		this.gameState.load.spritesheet('legs',
+			'assets/character_spritesheet_legs.png', 64, 30);
 
 		this.GRAVITY = 800;
 		this.ACCELERATION = 50;
@@ -18,123 +21,150 @@ Character.prototype = {
 	/**
 	 * The initial position of the Character in world coordinates.
 	 */
-	create: function(x, y) {
-		this.resetData();
+	 create : function(x, y) {
+	 	this.resetData();
 
-		this.sprite = this.gameState.add.sprite(x, y, 'character');
-		this.gameState.physics.arcade.enable(this.sprite);
-		this.sprite.body.gravity.y = this.GRAVITY;
-		this.sprite.anchor.setTo(0.5, 0.5);
+	 	this.legs = this.gameState.add.sprite(x, y, 'legs');
+
+	 	this.torso = this.gameState.add.sprite(x, y, 'torso');
+
+	 	this.gameState.physics.arcade.enable(this.torso);
+	 	this.gameState.physics.arcade.enable(this.legs);
+
+	 	this.legs.body.gravity.y = this.GRAVITY;
+
+	 	this.torso.anchor.setTo(0.5, 0.5);
+	 	this.legs.anchor.setTo(0.5, 0.5);
 
 		// Define the animations
-		this.sprite.animations.add('left', [0, 1, 2, 3], 15);
-		this.sprite.animations.add('right', [5, 6, 7, 4], 15);
-		this.sprite.animations.add('jumpLeft', [2], 10);
-		this.sprite.animations.add('jumpRight', [7], 10);
-		this.sprite.animations.add('landLeft', [1], 10);
-		this.sprite.animations.add('landRight', [6], 10);
+		this.legs.animations.add('left', [ 0, 1, 2, 3 ], 15);
+		this.legs.animations.add('right', [ 5, 6, 7, 4 ], 15);
+		this.legs.animations.add('jumpLeft', [ 2 ], 10);
+		this.legs.animations.add('jumpRight', [ 7 ], 10);
+		this.legs.animations.add('landLeft', [ 1 ], 10);
+		this.legs.animations.add('landRight', [ 6 ], 10);
+		this.torso.animations.add('left', [ 0 ], 10);
+		this.torso.animations.add('right', [ 1 ], 10);
 
 		this.cursors = this.gameState.input.keyboard.createCursorKeys();
 
-		this.gameState.camera.follow(this.sprite);
+		this.gameState.camera.follow(this.torso);
 
-		this.sprite.checkWorldBounds = true;
-		this.sprite.events.onOutOfBounds.add(this.characterOutsideWorld);
+		this.torso.checkWorldBounds = true;
+		this.torso.events.onOutOfBounds.add(this.characterOutsideWorld);
 
 		this.hookShot.create();
 	},
 
-	update: function() {
+	update : function() {
 		// Do physics-y things first
-		this.gameState.physics.arcade.collide(this.sprite, this.gameState.platforms);
+
+		this.gameState.physics.arcade.collide(this.legs,
+			this.gameState.platforms);
+
 		this.hookShot.update();
 
 		// Walk left and right
 		var accel = 0;
-		if (cursors.right.isDown){
+		if (cursors.right.isDown) {
 			accel = this.ACCELERATION;
-			this.sprite.animations.play('right');
+			this.legs.animations.play('right');
 			this.turnedRight = true;
-		}
-		else if (cursors.left.isDown){
+		} else if (cursors.left.isDown) {
 			accel = -this.ACCELERATION;
-			this.sprite.animations.play('left');
+			this.legs.animations.play('left');
 			this.turnedRight = false;
 		}
 
-		if(this.sprite.body.touching.down)
-			this.sprite.body.velocity.x += accel;
-		else
-			this.sprite.body.velocity.x += accel / 2;
+		if (this.legs.body.touching.down) {
+			this.legs.body.velocity.x += accel;
+		}
+		else {
+			this.legs.body.velocity.x += accel / 2;
+		}
 
 		// Enforce the max speed
-		if(this.sprite.body.velocity.x >= this.MAX_SPEED)
-			this.sprite.body.velocity.x = this.MAX_SPEED;
-		else if(this.sprite.body.velocity.x <= -this.MAX_SPEED)
-			this.sprite.body.velocity.x = -this.MAX_SPEED;
-		if(this.sprite.body.velocity.y <= -this.MAX_SPEED)
-			this.sprite.body.velocity.y = -this.MAX_SPEED;
+		if (this.legs.body.velocity.x >= this.MAX_SPEED) {
+			this.legs.body.velocity.x = this.MAX_SPEED;
+		}
+		else if (this.legs.body.velocity.x <= -this.MAX_SPEED) {
+			this.legs.body.velocity.x = -this.MAX_SPEED;
+		}
+		if (this.legs.body.velocity.y <= -this.MAX_SPEED) {
+			this.legs.body.velocity.y = -this.MAX_SPEED;
+		}
 
-		if(this.sprite.body.touching.down){
-			if(isNaN(this.sprite.body.velocity.x))
-				this.sprite.body.velocity.x = 0;
 
-			// Stop bobby if he's on the ground and the user doesn't want him to move.
-			if(! cursors.left.isDown && ! cursors.right.isDown)
-				this.sprite.body.velocity.x -= this.sprite.body.velocity.x / 5;
+		if (this.legs.body.touching.down) {
+			if (isNaN(this.legs.body.velocity.x)) {
+				this.legs.body.velocity.x = 0;
+			}
 
-			// Landing animation, note that this must be before the jump function.
-			if(this.jumping){
+			// Stop bobby if he's on the ground and the user doesn't want him to
+			// move.
+			if (!cursors.left.isDown && !cursors.right.isDown) {
+				this.legs.body.velocity.x -= this.legs.body.velocity.x / 5;
+			}
+
+			// Landing animation, note that this must be before the jump
+			// function.
+			if (this.jumping) {
 				this.jumping = false;
-				if(this.sprite.body.velocity.x > 0)
-					this.sprite.animations.play('landRight');
+				if (this.legs.body.velocity.x > 0)
+					this.legs.animations.play('landRight');
 				else
-					this.sprite.animations.play('landLeft');
+					this.legs.animations.play('landLeft');
 			}
 
 			// Jump bobby, jump!
 			if (cursors.up.isDown) {
 				this.jumping = true;
 				this.turnedWhileJumping = false;
-				this.sprite.body.velocity.y = this.JUMP_ACCELERATION;
-				if(this.sprite.body.velocity.x > 0)
-					this.sprite.animations.play('jumpRight');
+				this.legs.body.velocity.y = this.JUMP_ACCELERATION;
+				if (this.legs.body.velocity.x > 0)
+					this.legs.animations.play('jumpRight');
 				else
-					this.sprite.animations.play('jumpLeft');
+					this.legs.animations.play('jumpLeft');
 			}
 		}
 
 		// Shoot on mouseDown, cancel on mouseUp
-		if(game.input.activePointer.isDown)
+		if (game.input.activePointer.isDown)
 			this.hookShot.shoot();
-		else if(game.input.activePointer.isUp && this.hookShot.shooting || this.hookShot.pulling)
+		else if (game.input.activePointer.isUp && this.hookShot.shooting || this.hookShot.pulling)
 			this.hookShot.cancelHook();
 
-		var angle = Phaser.Math.radToDeg(game.physics.arcade.angleToPointer(this.sprite));
-		if(angle > 90 || angle < -90){
-			this.sprite.animations.frame = 1;
-			this.sprite.angle = 180 + angle;
+		var angle = Phaser.Math.radToDeg(game.physics.arcade
+			.angleToPointer(this.torso));
+		if (angle > 90 || angle < -90) {
+			this.torso.animations.frame = 0;
+			this.torso.angle = 180 + angle;
+		} else {
+			this.torso.animations.frame = 1;
+			this.torso.angle = angle;
 		}
-		else{
-			this.sprite.animations.frame = 6;
-			this.sprite.angle = angle;
-		}
+
+
+		this.torso.body.y = this.legs.body.y-45;
+		this.torso.body.x = this.legs.body.x;
 
 	},
 
-	render: function() {
+	render : function() {
 	},
 
-	resetData: function() {
-		// Jag är osäker på om vi vill sätta sprite osv. till null här. Gör inte det att bobbys sprite försvinner när vi resattar?
-		this.sprite = null;
+	resetData : function() {
+		// Jag är osäker på om vi vill sätta sprite osv. till null här. Gör inte
+		// det att bobbys sprite försvinner när vi resattar?
+		this.torso = null;
+		this.legs = null;
 		this.cursors = null;
 		this.turnedRight = false;
 		this.jumping = true;
 
 	},
 
-	characterOutsideWorld: function() {
+	characterOutsideWorld : function() {
 		game.state.restart(game.state.current);
 	}
 
