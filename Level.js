@@ -16,11 +16,11 @@ Level.prototype = {
 		this.bobby = new Character(this);
 		this.bobby.preload();
 
+		this.timer = new Timer(this);
+		this.timer.preload();
 	},
 
 	create: function() {
-		counter = 0;
-
 		this.physics.startSystem(Phaser.Physics.Arcade);
 		this.add.tileSprite(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT, 'background');
 		this.world.setBounds(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT);
@@ -30,6 +30,7 @@ Level.prototype = {
 		this.loadLevelObjects();
 
 		this.bobby.create(this.characterStartX, this.characterStartY);
+		this.timer.create();
 
 		// Register hooks for the number keys to switch between levels.
 		keynames = [ "", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
@@ -41,14 +42,6 @@ Level.prototype = {
 			// Equivelant of this.input.keyboard.addKey(49,50, .. ,58)
 			this.input.keyboard.addKey(Phaser.Keyboard[keynames[n]]).onDown.add(switchLevel);
 		}
-
-		// Adds a text in the top right corner showing the time.
-		counterText = this.add.text(10, 5, 'Time: 0', {font: "26px Verdana", fill: "#000000", align: "left"});
-		// The texts position is relative to the cameras.
-		counterText.fixedToCamera = true;
-
-
-		this.time.events.loop(Phaser.Timer.SECOND, this.updateCounter, this);
 	},
 
 	update: function() {
@@ -86,11 +79,5 @@ Level.prototype = {
 
 	changeText: function(text) {
 		this.tutoringText.setText(text);
-	},
-
-	updateCounter: function() {
-		counter++;
-
-		counterText.setText('Time: ' + counter);
 	}
 };
