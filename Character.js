@@ -48,8 +48,6 @@ Character.prototype = {
 
 		this.cursors = this.gameState.input.keyboard.createCursorKeys();
 
-		this.gameState.camera.follow(this.torso);
-
 		this.torso.checkWorldBounds = true;
 		this.torso.events.onOutOfBounds.add(this.characterOutsideWorld);
 
