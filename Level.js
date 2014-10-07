@@ -14,7 +14,7 @@ Level.prototype = {
 		this.loadAssets();
 
 		this.bobby = new Character(this);
-		this.bobby.preload();
+		this.bobby.preload(this.characterStartX, this.characterStartY);
 
 	},
 
@@ -29,7 +29,7 @@ Level.prototype = {
 
 		this.loadLevelObjects();
 
-		this.bobby.create(this.characterStartX, this.characterStartY);
+		this.bobby.create();
 
 		// Register hooks for the number keys to switch between levels.
 		keynames = [ "", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
