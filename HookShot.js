@@ -42,21 +42,21 @@ HookShot.prototype = {
 		if(this.shooting){
 			this.gameState.physics.arcade.collide(
 				this.hook, this.gameState.platforms, this.hit, null, this);
-			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent.torso);
+			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent);
 
 			if (distance > 400)
 				this.cancelHook();
 		}
 		else if(this.pulling){
-			var angle = game.physics.arcade.angleBetween(this.hook, this.parent.torso);
-			this.parent.torso.body.velocity.x = -this.speed * Math.cos(angle);
-			this.parent.legs.body.velocity.x = this.parent.torso.body.velocity.x;
+			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
+			this.parent.body.velocity.x = -this.speed * Math.cos(angle);
+			this.parent.legs.body.velocity.x = this.parent.body.velocity.x;
 
-			this.parent.torso.body.velocity.y = -this.speed * Math.sin(angle);
-			this.parent.legs.body.velocity.y = this.parent.torso.body.velocity.y;
+			this.parent.body.velocity.y = -this.speed * Math.sin(angle);
+			this.parent.legs.body.velocity.y = this.parent.body.velocity.y;
 		}
 		else if(this.cancelling){
-			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent.torso);
+			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent);
 			if(Phaser.Math.fuzzyEqual(distance, 0, 50)) {
 				this.hook.kill();
 				this.cancelling = false;
@@ -67,7 +67,7 @@ HookShot.prototype = {
 					that.cooldown = false
 				}, this.cooldownLength);
 			}
-			var angle = game.physics.arcade.angleBetween(this.hook, this.parent.torso);
+			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
 			this.hook.body.velocity.x = this.speed * Math.cos(angle);
 			this.hook.body.velocity.y = this.speed * Math.sin(angle);
 		}
@@ -75,7 +75,7 @@ HookShot.prototype = {
 			return;
 
 		this.hook.angle = 180 + Phaser.Math.radToDeg(
-			game.physics.arcade.angleBetween(this.hook, this.parent.torso));
+			game.physics.arcade.angleBetween(this.hook, this.parent));
 
 	},
 
@@ -84,7 +84,7 @@ HookShot.prototype = {
 	 */
 	shoot: function() {
 		if( !this.shooting && !this.pulling && !this.cancelling && !this.cooldown ){
-			this.hook.reset(this.parent.torso.x, this.parent.torso.y);
+			this.hook.reset(this.parent.x, this.parent.y);
 			this.hook.rotation = game.physics.arcade.moveToPointer(this.hook, this.speed, game.input.activePointer);
 			this.shooting = this.cooldown = true;
 		}
@@ -109,7 +109,7 @@ HookShot.prototype = {
 		if(!this.cancelling) {
 			this.shooting = this.pulling = false;
 			this.cancelling = true;
-			game.physics.arcade.moveToObject(this.hook, this.parent.torso, 1500);
+			game.physics.arcade.moveToObject(this.hook, this.parent, 1500);
 		}
 	}
 };

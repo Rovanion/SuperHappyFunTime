@@ -14,7 +14,7 @@ Character.prototype = {
 		this.ACCELERATION = 50;
 		this.JUMP_ACCELERATION = -350;
 		this.MAX_SPEED = 500;
-		this.hookShot = new HookShot(this.gameState, this);
+		this.hookShot = new HookShot(this.gameState, this.torso);
 		this.hookShot.preload();
 	},
 
@@ -25,7 +25,6 @@ Character.prototype = {
 	 	this.resetData();
 
 	 	this.legs = this.gameState.add.sprite(x, y, 'legs');
-
 	 	this.torso = this.gameState.add.sprite(x, y, 'torso');
 
 	 	this.gameState.physics.arcade.enable(this.torso);
@@ -56,8 +55,7 @@ Character.prototype = {
 
 	update : function() {
 		// Do physics-y things first
-
-		this.gameState.physics.arcade.collide(this.legs,
+		this.gameState.physics.arcade.collide(this.torso,
 			this.gameState.platforms);
 
 		this.hookShot.update();
