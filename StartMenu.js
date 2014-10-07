@@ -44,8 +44,8 @@ StartMenu.prototype = {
 		this.choices = [this.playText, this.loadText, this.highScoreText];
 
 		for (var i = 0; i < this.choices.length; i++) {
-			this.choices[i] = this.add.text(50, 300 + i*100, "", {
-				font: "50px Arial",
+			this.choices[i] = this.add.text(50, game.height - 300 + i*100, "", {
+				font: "50px Verdana",
 				fill: "#ffffff",
 				align: "left"
 			});
