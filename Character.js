@@ -3,6 +3,10 @@ Character = function(gameState) {
 };
 
 Character.prototype = {
+	GRAVITY: 800,
+	ACCELERATION: 50,
+	JUMP_ACCELERATION: -350,
+	MAX_SPEED: 500,
 
 	preload : function() {
 		this.gameState.load.spritesheet('torso',
@@ -10,16 +14,12 @@ Character.prototype = {
 		this.gameState.load.spritesheet('legs',
 			'assets/character_spritesheet_legs.png', 64, 30);
 
-		this.GRAVITY = 800;
-		this.ACCELERATION = 50;
-		this.JUMP_ACCELERATION = -350;
-		this.MAX_SPEED = 500;
-		this.hookShot = new HookShot(this.gameState, this.torso);
+		this.hookShot = new HookShot(this.gameState);
 		this.hookShot.preload();
 	},
 
 	/**
-	 * The initial position of the Character in world coordinates.
+	 * The initial position of the Character in world coordinates x, y.
 	 */
 	 create : function(x, y) {
 	 	this.resetData();
@@ -50,12 +50,13 @@ Character.prototype = {
 		this.torso.checkWorldBounds = true;
 		this.torso.events.onOutOfBounds.add(this.characterOutsideWorld);
 
-		this.hookShot.create();
+		this.hookShot.create(this.legs);
+		this.gameState.camera.follow(this.torso);
 	},
 
 	update : function() {
 		// Do physics-y things first
-		this.gameState.physics.arcade.collide(this.torso,
+		this.gameState.physics.arcade.collide(this.legs,
 			this.gameState.platforms);
 
 		this.hookShot.update();
@@ -143,7 +144,6 @@ Character.prototype = {
 
 		this.torso.body.y = this.legs.body.y-45;
 		this.torso.body.x = this.legs.body.x;
-
 	},
 
 	render : function() {
@@ -157,7 +157,6 @@ Character.prototype = {
 		this.cursors = null;
 		this.turnedRight = false;
 		this.jumping = true;
-
 	},
 
 	characterOutsideWorld : function() {

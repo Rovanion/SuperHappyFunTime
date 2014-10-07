@@ -1,6 +1,5 @@
-HookShot = function(gameState, parent) {
+HookShot = function(gameState) {
 	this.gameState = gameState;
-	this.parent = parent;
 };
 
 HookShot.prototype = {
@@ -25,7 +24,8 @@ HookShot.prototype = {
 		this.gameState.load.image('chain', 'assets/chain.png');
 	},
 
-	create: function() {
+	create: function(parent) {
+		this.parent = parent;
 		this.hook = this.gameState.add.sprite(-100, -100, 'hook');
 		this.gameState.physics.arcade.enable(this.hook);
 		this.hook.anchor.setTo(0.1, 0.5);
@@ -50,10 +50,8 @@ HookShot.prototype = {
 		else if(this.pulling){
 			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
 			this.parent.body.velocity.x = -this.speed * Math.cos(angle);
-			this.parent.legs.body.velocity.x = this.parent.body.velocity.x;
 
 			this.parent.body.velocity.y = -this.speed * Math.sin(angle);
-			this.parent.legs.body.velocity.y = this.parent.body.velocity.y;
 		}
 		else if(this.cancelling){
 			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent);
