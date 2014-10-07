@@ -3,10 +3,12 @@ Character = function(gameState) {
 };
 
 Character.prototype = {
-	GRAVITY: 800,
+	GRAVITY: 900,
 	ACCELERATION: 50,
 	JUMP_ACCELERATION: -350,
-	MAX_SPEED: 500,
+	MAX_SPEED: 600,
+	turnedRight: false,
+	jumping: true,
 
 	preload: function() {
 		this.gameState.load.spritesheet('torso',
@@ -22,8 +24,6 @@ Character.prototype = {
 	 * The initial position of the Character in world coordinates x, y.
 	 */
 	 create: function(x, y) {
-	 	this.resetData();
-
 	 	this.legs = this.gameState.add.sprite(x, y, 'legs');
 	 	this.torso = this.gameState.add.sprite(x, y, 'torso');
 
@@ -91,7 +91,6 @@ Character.prototype = {
 			this.torso.body.velocity.y = -this.MAX_SPEED;
 		}
 
-
 		if (this.torso.body.touching.down) {
 			if (isNaN(this.torso.body.velocity.x)) {
 				this.torso.body.velocity.x = 0;
@@ -154,16 +153,6 @@ Character.prototype = {
 	},
 
 	render: function() {
-	},
-
-	resetData: function() {
-		// Jag är osäker på om vi vill sätta sprite osv. till null här. Gör
-		// inte det att bobbys sprite försvinner när vi resattar?
-		this.torso = null;
-		this.legs = null;
-		this.cursors = null;
-		this.turnedRight = false;
-		this.jumping = true;
 	},
 
 	characterOutsideWorld : function() {
