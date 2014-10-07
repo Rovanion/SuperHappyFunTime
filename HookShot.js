@@ -79,11 +79,13 @@ HookShot.prototype = {
 
 	/**
 	 * Shoot the hookshot from one position to the mouse.
+	 * The hook is shot from, well, fromX and fromY.
 	 */
-	shoot: function() {
-		if( !this.shooting && !this.pulling && !this.cancelling && !this.cooldown ){
-			this.hook.reset(this.parent.x, this.parent.y);
-			this.hook.rotation = game.physics.arcade.moveToPointer(this.hook, this.speed, game.input.activePointer);
+	shoot: function(fromX, fromY) {
+		if (!this.shooting && !this.pulling && !this.cancelling && !this.cooldown){
+			var angle = game.physics.arcade.angleToPointer(this.parent);
+			this.hook.reset(fromX, fromY);
+			this.hook.rotation = game.physics.arcade.moveToPointer(this.hook, this.speed);
 			this.shooting = this.cooldown = true;
 		}
 	},

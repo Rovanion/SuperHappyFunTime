@@ -8,7 +8,7 @@ Character.prototype = {
 	JUMP_ACCELERATION: -350,
 	MAX_SPEED: 500,
 
-	preload : function() {
+	preload: function() {
 		this.gameState.load.spritesheet('torso',
 			'assets/character_spritesheet_body.png', 64, 64);
 		this.gameState.load.spritesheet('legs',
@@ -21,7 +21,7 @@ Character.prototype = {
 	/**
 	 * The initial position of the Character in world coordinates x, y.
 	 */
-	 create : function(x, y) {
+	 create: function(x, y) {
 	 	this.resetData();
 
 	 	this.legs = this.gameState.add.sprite(x, y, 'legs');
@@ -30,7 +30,7 @@ Character.prototype = {
 	 	this.gameState.physics.arcade.enable(this.torso);
 	 	this.gameState.physics.arcade.enable(this.legs);
 
-	 	this.legs.body.gravity.y = this.GRAVITY;
+	 	this.torso.body.gravity.y = this.GRAVITY;
 
 	 	this.torso.anchor.setTo(0.5, 0.5);
 	 	this.legs.anchor.setTo(0.5, 0.5);
@@ -50,13 +50,13 @@ Character.prototype = {
 		this.torso.checkWorldBounds = true;
 		this.torso.events.onOutOfBounds.add(this.characterOutsideWorld);
 
-		this.hookShot.create(this.legs);
+		this.hookShot.create(this.torso);
 		this.gameState.camera.follow(this.torso);
 	},
 
-	update : function() {
+	update: function() {
 		// Do physics-y things first
-		this.gameState.physics.arcade.collide(this.legs,
+		this.gameState.physics.arcade.collide(this.torso,
 			this.gameState.platforms);
 
 		this.hookShot.update();
@@ -73,85 +73,92 @@ Character.prototype = {
 			this.turnedRight = false;
 		}
 
-		if (this.legs.body.touching.down) {
-			this.legs.body.velocity.x += accel;
+		if (this.torso.body.touching.down) {
+			this.torso.body.velocity.x += accel;
 		}
 		else {
-			this.legs.body.velocity.x += accel / 2;
+			this.torso.body.velocity.x += accel / 2;
 		}
 
 		// Enforce the max speed
-		if (this.legs.body.velocity.x >= this.MAX_SPEED) {
-			this.legs.body.velocity.x = this.MAX_SPEED;
+		if (this.torso.body.velocity.x >= this.MAX_SPEED) {
+			this.torso.body.velocity.x = this.MAX_SPEED;
 		}
-		else if (this.legs.body.velocity.x <= -this.MAX_SPEED) {
-			this.legs.body.velocity.x = -this.MAX_SPEED;
+		else if (this.torso.body.velocity.x <= -this.MAX_SPEED) {
+			this.torso.body.velocity.x = -this.MAX_SPEED;
 		}
-		if (this.legs.body.velocity.y <= -this.MAX_SPEED) {
-			this.legs.body.velocity.y = -this.MAX_SPEED;
+		if (this.torso.body.velocity.y <= -this.MAX_SPEED) {
+			this.torso.body.velocity.y = -this.MAX_SPEED;
 		}
 
 
-		if (this.legs.body.touching.down) {
-			if (isNaN(this.legs.body.velocity.x)) {
-				this.legs.body.velocity.x = 0;
+		if (this.torso.body.touching.down) {
+			if (isNaN(this.torso.body.velocity.x)) {
+				this.torso.body.velocity.x = 0;
 			}
 
-			// Stop bobby if he's on the ground and the user doesn't want him to
-			// move.
+			// Stop bobby if he's on the ground and the user doesn't want
+			// him to move.
 			if (!cursors.left.isDown && !cursors.right.isDown) {
-				this.legs.body.velocity.x -= this.legs.body.velocity.x / 5;
+				this.torso.body.velocity.x -= this.torso.body.velocity.x / 5;
 			}
 
 			// Landing animation, note that this must be before the jump
 			// function.
 			if (this.jumping) {
 				this.jumping = false;
-				if (this.legs.body.velocity.x > 0)
-					this.legs.animations.play('landRight');
+				if (this.torso.body.velocity.x > 0)
+					this.torso.animations.play('landRight');
 				else
-					this.legs.animations.play('landLeft');
+					this.torso.animations.play('landLeft');
 			}
 
 			// Jump bobby, jump!
 			if (cursors.up.isDown) {
 				this.jumping = true;
 				this.turnedWhileJumping = false;
-				this.legs.body.velocity.y = this.JUMP_ACCELERATION;
-				if (this.legs.body.velocity.x > 0)
-					this.legs.animations.play('jumpRight');
+				this.torso.body.velocity.y = this.JUMP_ACCELERATION;
+				if (this.torso.body.velocity.x > 0)
+					this.torso.animations.play('jumpRight');
 				else
-					this.legs.animations.play('jumpLeft');
+					this.torso.animations.play('jumpLeft');
 			}
 		}
 
+		var angle = -game.physics.arcade.angleToPointer(this.torso) + Math.PI / 2;
 		// Shoot on mouseDown, cancel on mouseUp
-		if (game.input.activePointer.isDown)
-			this.hookShot.shoot();
-		else if (game.input.activePointer.isUp && this.hookShot.shooting || this.hookShot.pulling)
+		if (game.input.activePointer.isDown){
+			this.hookShot.shoot(
+				this.torso.x + 110 * Math.sin(angle),
+				this.torso.y + 110 * Math.cos(angle)
+			);
+		}
+		else if (game.input.activePointer.isUp && this.hookShot.shooting
+						 || this.hookShot.pulling){
 			this.hookShot.cancelHook();
-
-		var angle = Phaser.Math.radToDeg(game.physics.arcade
-			.angleToPointer(this.torso));
-		if (angle > 90 || angle < -90) {
-			this.torso.animations.frame = 0;
-			this.torso.angle = 180 + angle;
-		} else {
-			this.torso.animations.frame = 1;
-			this.torso.angle = angle;
 		}
 
+		// So don't ask me exactly why I add π / 2 here, I just do.
+		angle += Math.PI / 2;
 
-		this.torso.body.y = this.legs.body.y-45;
-		this.torso.body.x = this.legs.body.x;
+		if (angle > Math.PI * 3 / 2 || angle < Math.PI / 2) {
+			this.torso.animations.frame = 0;
+			this.torso.rotation = -angle;
+		} else {
+			this.torso.animations.frame = 1;
+			this.torso.rotation = -angle - Math.PI;
+		}
+
+		this.legs.body.y = this.torso.body.y + 45;
+		this.legs.body.x = this.torso.body.x;
 	},
 
-	render : function() {
+	render: function() {
 	},
 
-	resetData : function() {
-		// Jag är osäker på om vi vill sätta sprite osv. till null här. Gör inte
-		// det att bobbys sprite försvinner när vi resattar?
+	resetData: function() {
+		// Jag är osäker på om vi vill sätta sprite osv. till null här. Gör
+		// inte det att bobbys sprite försvinner när vi resattar?
 		this.torso = null;
 		this.legs = null;
 		this.cursors = null;
