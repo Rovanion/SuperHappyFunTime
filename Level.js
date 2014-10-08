@@ -14,7 +14,7 @@ Level.prototype = {
 		this.loadAssets();
 
 		this.bobby = new Character(this);
-		this.bobby.preload();
+		this.bobby.preload(this.characterStartX, this.characterStartY);
 
 		this.timer = new Timer(this);
 		this.timer.preload();
