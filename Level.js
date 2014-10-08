@@ -1,6 +1,6 @@
-Level = function(width, height) {
-	this.LEVEL_WIDTH = width;
-	this.LEVEL_HEIGHT = height;
+Level = function(levelWidth, levelHeight) {
+	this.width = levelWidth;
+	this.height = levelHeight;
 };
 
 Level.prototype = {
@@ -14,6 +14,7 @@ Level.prototype = {
 		this.loadAssets();
 
 		this.bobby = new Character(this);
+		bobby = this.bobby;
 		this.bobby.preload(this.characterStartX, this.characterStartY);
 
 		this.timer = new Timer(this);
@@ -22,8 +23,8 @@ Level.prototype = {
 
 	create: function() {
 		this.physics.startSystem(Phaser.Physics.Arcade);
-		this.add.tileSprite(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT, 'background');
-		this.world.setBounds(0, 0, this.LEVEL_WIDTH, this.LEVEL_HEIGHT);
+		this.add.tileSprite(0, 0, this.width, this.height, 'background');
+		this.world.setBounds(0, 0, this.width, this.height);
 		this.platforms = this.add.group();
 		this.platforms.enableBody = true;
 

@@ -14,7 +14,7 @@ HookShot.prototype = {
 	// Defining the length of the cooldown
 	cooldownLength: 500,
 	// The speed at which the hook draws the character towards its target.
-	speed: 1000,
+	speed: 1200,
 
 	/**
 	 * Function which should be called before the class is used in order to load it's assets
@@ -55,7 +55,7 @@ HookShot.prototype = {
 		}
 		else if(this.cancelling){
 			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent);
-			if(Phaser.Math.fuzzyEqual(distance, 0, 50)) {
+			if(Phaser.Math.fuzzyEqual(distance, 0, 120)) {
 				this.hook.kill();
 				this.cancelling = false;
 
@@ -79,11 +79,13 @@ HookShot.prototype = {
 
 	/**
 	 * Shoot the hookshot from one position to the mouse.
+	 * The hook is shot from, well, fromX and fromY.
 	 */
-	shoot: function() {
-		if( !this.shooting && !this.pulling && !this.cancelling && !this.cooldown ){
-			this.hook.reset(this.parent.x, this.parent.y);
-			this.hook.rotation = game.physics.arcade.moveToPointer(this.hook, this.speed, game.input.activePointer);
+	shoot: function(fromX, fromY) {
+		if (!this.shooting && !this.pulling && !this.cancelling && !this.cooldown){
+			var angle = game.physics.arcade.angleToPointer(this.parent);
+			this.hook.reset(fromX, fromY);
+			this.hook.rotation = game.physics.arcade.moveToPointer(this.hook, this.speed);
 			this.shooting = this.cooldown = true;
 		}
 	},
