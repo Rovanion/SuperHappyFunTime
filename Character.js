@@ -57,7 +57,7 @@ Character.prototype = {
 	update: function() {
 		// Do physics-y things first
 		this.gameState.physics.arcade.collide(this.torso,
-			this.gameState.platforms);
+			this.gameState.layer);
 
 		this.hookShot.update();
 
@@ -73,7 +73,7 @@ Character.prototype = {
 			this.turnedRight = false;
 		}
 
-		if (this.torso.body.touching.down) {
+		if (this.torso.body.blocked.down) {
 			this.torso.body.velocity.x += accel;
 		}
 		else {
@@ -91,7 +91,7 @@ Character.prototype = {
 			this.torso.body.velocity.y = -this.MAX_SPEED;
 		}
 
-		if (this.torso.body.touching.down) {
+		if (this.torso.body.blocked.down) {
 			if (isNaN(this.torso.body.velocity.x)) {
 				this.torso.body.velocity.x = 0;
 			}
@@ -132,8 +132,7 @@ Character.prototype = {
 				this.torso.y + 110 * Math.cos(angle)
 			);
 		}
-		else if (game.input.activePointer.isUp && this.hookShot.shooting
-						 || this.hookShot.pulling){
+		else if (game.input.activePointer.isUp && this.hookShot.shooting || this.hookShot.pulling){
 			this.hookShot.cancelHook();
 		}
 
@@ -150,9 +149,6 @@ Character.prototype = {
 
 		this.legs.body.y = this.torso.body.y + 45;
 		this.legs.body.x = this.torso.body.x;
-	},
-
-	render: function() {
 	},
 
 	characterOutsideWorld : function() {
