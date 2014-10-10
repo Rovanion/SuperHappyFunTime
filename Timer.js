@@ -12,7 +12,7 @@ Timer.prototype = {
 	create: function(){
 		this.background = this.gameState.add.sprite(0, game.height - 60, 'time-background');
 		this.background.scale.x = this.background.scale.y = 0.4;
-		this.counterText = this.gameState.add.text(30, game.height - 45, '0.00', {
+		this.counterText = this.gameState.add.text(37, game.height - 49, '0.00', {
 			font: "26px Verdana",
 			fill: "#fff",
 			align: "center"
