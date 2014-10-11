@@ -5,7 +5,7 @@ window.onload = function() {
 	function create () {
 		cursors = game.input.keyboard.createCursorKeys();
 		setupLevels();
-		game.state.start('startMenu');
+		game.state.start('title');
 	}
 
 	/**
@@ -17,5 +17,6 @@ window.onload = function() {
 	function setupLevels(){
 		game.state.add('1', new Falling());
 		game.state.add('startMenu', new StartMenu());
+		game.state.add('title', new TitleScreen());
 	}
 };
