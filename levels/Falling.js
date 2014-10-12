@@ -52,7 +52,7 @@ Falling.prototype.create = function() {
 	this.mouse.anchor.setTo(0.5, 0.5);
 	this.mouse.animations.add('blinking', [0, 1], 1);
 
-	this.mouseText = this.add.text(this.mouse.x, this.mouse.y - 80, 'Hookshot', {
+	this.mouseText = this.add.text(this.mouse.x, this.mouse.y - 80, 'Hold to Hookshot', {
 		font: "20px Verdana",
 		fill: "#000",
 		align: "center"
