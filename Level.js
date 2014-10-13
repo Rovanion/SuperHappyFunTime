@@ -1,7 +1,9 @@
-Level = function (csvfile, characterStartX, characterStartY) {
+Level = function (csvfile, characterStartX, characterStartY, goalstateX, goalstateY) {
 	this.csvfile = csvfile;
 	this.characterStartX = characterStartX;
 	this.characterStartY = characterStartY;
+	this.goalstateX = goalstateX;
+	this.goalstateY = goalstateY;
 };
 
 Level.prototype = {
@@ -11,6 +13,8 @@ Level.prototype = {
 
 		this.load.tilemap('map', this.csvfile, null, Phaser.Tilemap.CSV);
 		this.load.image('tilemap', 'assets/platformblock.png');
+
+		this.load.image('goal', 'assets/candy.png');
 
 		this.bobby = new Character(this);
 		bobby = this.bobby;
@@ -39,6 +43,10 @@ Level.prototype = {
 		this.bobby.create(this.characterStartX, this.characterStartY);
 		this.timer.create();
 
+		this.goalstate = this.add.sprite(this.goalstateX, this.goalstateY, 'goal');
+		this.goalstate.anchor.setTo(0.5, 0.5);
+		this.physics.arcade.enable(this.goalstate);
+
 		// Register hooks for the number keys to switch between levels.
 		keynames = [ "", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
 		"SEVEN", "EIGHT", "NINE", "TEN", "ZERO" ];
@@ -53,5 +61,11 @@ Level.prototype = {
 
 	update: function() {
 		this.bobby.update();
+		this.physics.arcade.collide(this.bobby.torso, this.goalstate, this.goalstateReached);
+	},
+
+	goalstateReached: function() {
+		game.state.restart(game.state.current);
 	}
+
 };

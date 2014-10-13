@@ -5,7 +5,7 @@
 
  Falling = function() {};
 
- Falling.prototype = new Level('levels/Falling.csv', 60, 150);
+ Falling.prototype = new Level('levels/Falling.csv', 60, 150, 1415, 280);
 
 // Overrides the preload function from Level to add update events.
 Falling.prototype.preload = function() {
