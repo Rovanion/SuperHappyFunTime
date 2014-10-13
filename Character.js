@@ -9,6 +9,8 @@ Character.prototype = {
 	MAX_SPEED: 600,
 	turnedRight: false,
 	jumping: true,
+	// Whether or not the head is rotating to indicate a cooldown.
+	rotating: false,
 
 	preload: function() {
 		this.gameState.load.spritesheet('torso',
@@ -23,17 +25,18 @@ Character.prototype = {
 	/**
 	 * The initial position of the Character in world coordinates x, y.
 	 */
-	 create: function(x, y) {
-	 	this.legs = this.gameState.add.sprite(x, y, 'legs');
-	 	this.torso = this.gameState.add.sprite(x, y, 'torso');
+	create: function(x, y) {
+		this.legs = this.gameState.add.sprite(x, y, 'legs');
+		this.torso = this.gameState.add.sprite(x, y, 'torso');
+		this.torso.indicateCooldown = this.indicateCooldown;
 
-	 	this.gameState.physics.arcade.enable(this.torso);
-	 	this.gameState.physics.arcade.enable(this.legs);
+		this.gameState.physics.arcade.enable(this.torso);
+		this.gameState.physics.arcade.enable(this.legs);
 
-	 	this.torso.body.gravity.y = this.GRAVITY;
+		this.torso.body.gravity.y = this.GRAVITY;
 
-	 	this.torso.anchor.setTo(0.5, 0.5);
-	 	this.legs.anchor.setTo(0.5, 0.5);
+		this.torso.anchor.setTo(0.5, 0.5);
+		this.legs.anchor.setTo(0.5, 0.5);
 
 		// Define the animations
 		this.legs.animations.add('left', [ 0, 1, 2, 3 ], 15);
@@ -139,12 +142,25 @@ Character.prototype = {
 		// So don't ask me exactly why I add π / 2 here, I just do.
 		angle += Math.PI / 2;
 
+
+
 		if (angle > Math.PI * 3 / 2 || angle < Math.PI / 2) {
 			this.torso.animations.frame = 0;
-			this.torso.rotation = -angle;
+			if(this.rotating)
+				// Split a rotation up in as many milliseconds as there are in the cooldown,
+				// then take that times the number of milliseconds passed since the start.
+				this.torso.rotation = -angle + 2 * Math.PI / this.rotationTimeTotal
+					* (Date.now() - this.rotationStartTime);
+			else
+				this.torso.rotation = -angle;
 		} else {
 			this.torso.animations.frame = 1;
-			this.torso.rotation = -angle - Math.PI;
+
+			if(this.rotating)
+				this.torso.rotation = -angle + 2 * Math.PI / this.rotationTimeTotal
+				  * (Date.now() - this.rotationStartTime) - Math.PI;
+			else
+				this.torso.rotation = -angle - Math.PI;
 		}
 
 		this.legs.body.y = this.torso.body.y + 45;
@@ -153,6 +169,18 @@ Character.prototype = {
 
 	characterOutsideWorld : function() {
 		game.state.restart(game.state.current);
-	}
+	},
 
+	/**
+	 * Indicate to the user that there is a cooldown going on.
+	 * @param {integer} time The length of the cooldown in milliseconds.
+	 */
+	indicateCooldown: function(time){
+		this.rotating = true;
+		this.rotationTimeTotal = time;
+		this.rotationStartTime = Date.now();
+		game.time.events.add(time, function() {
+			this.rotating = false;
+		}, this);
+	}
 };

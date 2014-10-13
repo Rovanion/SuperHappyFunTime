@@ -59,11 +59,7 @@ HookShot.prototype = {
 				this.hook.kill();
 				this.cancelling = false;
 
-				// The cooldown runs out in 2 seconds.
-				var that = this;
-				setTimeout(function() {
-					that.cooldown = false
-				}, this.cooldownLength);
+				this.startCooldown();
 			}
 			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
 			this.hook.body.velocity.x = this.speed * Math.cos(angle);
@@ -86,7 +82,8 @@ HookShot.prototype = {
 			var angle = game.physics.arcade.angleToPointer(this.parent);
 			this.hook.reset(fromX, fromY);
 			this.hook.rotation = game.physics.arcade.moveToPointer(this.hook, this.speed);
-			this.shooting = this.cooldown = true;
+			this.shooting = true;
+			this.startCooldown();
 		}
 	},
 
@@ -111,5 +108,14 @@ HookShot.prototype = {
 			this.cancelling = true;
 			game.physics.arcade.moveToObject(this.hook, this.parent, 1500);
 		}
+	},
+
+	startCooldown: function(){
+		this.cooldown = true;
+		game.time.events.add(this.cooldownLength, function() {
+			this.cooldown = false;
+		}, this);
+
+		this.parent.indicateCooldown(this.cooldownLength);
 	}
 };
