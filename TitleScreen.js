@@ -14,6 +14,7 @@ TitleScreen.prototype = {
 		this.load.image('fun', 'assets/title/fun.png');
 		this.load.image('time', 'assets/title/time.png');
 		this.load.image('line', 'assets/title/line.png');
+		this.load.audio('funtime', ['assets/sound/super-happy-fun-time.opus', 'assets/sound/super-happy-fun-time.ogg'], true);
 		// Make the background white.
 		game.stage.backgroundColor = '#fff';
 	},
@@ -25,6 +26,9 @@ TitleScreen.prototype = {
 		this.happy = this.graphics.create(1500, 650, 'happy', this.graphics);
 		this.fun = this.graphics.create(430, 920, 'fun', this.graphics);
 		this.time = this.graphics.create(1050, 920, 'time', this.graphics);
+		this.sound = this.add.audio('funtime');
+
+		game.time.events.add(800, function() {this.sound.play()}, this);
 
 		// Queue up the animations!
 		var delay = 0;
