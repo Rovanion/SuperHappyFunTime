@@ -142,25 +142,14 @@ Character.prototype = {
 		// So don't ask me exactly why I add π / 2 here, I just do.
 		angle += Math.PI / 2;
 
-
-
-		if (angle > Math.PI * 3 / 2 || angle < Math.PI / 2) {
-			this.torso.animations.frame = 0;
-			if(this.rotating)
-				// Split a rotation up in as many milliseconds as there are in the cooldown,
-				// then take that times the number of milliseconds passed since the start.
-				this.torso.rotation = -angle + 2 * Math.PI / this.rotationTimeTotal
-					* (Date.now() - this.rotationStartTime);
-			else
+		if(!this.torso.rotating){
+			if (angle > Math.PI * 3 / 2 || angle < Math.PI / 2) {
+				this.torso.animations.frame = 0;
 				this.torso.rotation = -angle;
-		} else {
-			this.torso.animations.frame = 1;
-
-			if(this.rotating)
-				this.torso.rotation = -angle + 2 * Math.PI / this.rotationTimeTotal
-				  * (Date.now() - this.rotationStartTime) - Math.PI;
-			else
+			} else {
+				this.torso.animations.frame = 1;
 				this.torso.rotation = -angle - Math.PI;
+			}
 		}
 
 		this.legs.body.y = this.torso.body.y + 45;
@@ -169,18 +158,5 @@ Character.prototype = {
 
 	characterOutsideWorld : function() {
 		game.state.restart(game.state.current);
-	},
-
-	/**
-	 * Indicate to the user that there is a cooldown going on.
-	 * @param {integer} time The length of the cooldown in milliseconds.
-	 */
-	indicateCooldown: function(time){
-		this.rotating = true;
-		this.rotationTimeTotal = time;
-		this.rotationStartTime = Date.now();
-		game.time.events.add(time, function() {
-			this.rotating = false;
-		}, this);
 	}
 };
