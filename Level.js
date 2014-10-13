@@ -27,6 +27,9 @@ Level.prototype = {
 	create: function() {
 		var map = game.add.tilemap('map', 40, 40);
 
+		currentLevel = this.levelStateName;
+		nextLevel = this.nextLevelStateName;
+
 		map.addTilesetImage('tilemap');
 
 		this.physics.startSystem(Phaser.Physics.Arcade);
@@ -52,7 +55,6 @@ Level.prototype = {
 		"SEVEN", "EIGHT", "NINE", "TEN", "ZERO" ];
 		for ( var n = 1; n <= 10; n++){
 			// The extra anonymous function here exists because of:
-			// http://www.mennovanslooten.nl/blog/post/62
 			switchLevel = ( function(n) { return function () { game.state.start(n); } } )(n);
 			// Equivelant of this.input.keyboard.addKey(49,50, .. ,58)
 			this.input.keyboard.addKey(Phaser.Keyboard[keynames[n]]).onDown.add(switchLevel);
@@ -65,7 +67,7 @@ Level.prototype = {
 	},
 
 	goalstateReached: function() {
-		game.state.restart(game.state.current);
+		game.state.start('betweenLevels', true, false);
 	}
 
 };
