@@ -17,7 +17,8 @@ HookShot.prototype = {
 	speed: 1200,
 
 	/**
-	 * Function which should be called before the class is used in order to load it's assets
+	 * Function which should be called before the class is used in
+	 * order to load it's assets.
 	 */
 	preload: function() {
 		this.gameState.load.image('hook', 'assets/hook.png');
@@ -33,7 +34,17 @@ HookShot.prototype = {
 		this.chain = this.gameState.add.sprite(0, 0, 'chain');
 		this.hook.addChild(this.chain);
 		this.chain.anchor.setTo(1, 0.5);
-		this.chain.z = 0;
+
+		var length = 918/20;
+		var points = [];
+		for (var i = 0; i < 20; i++) {
+			points.push(new Phaser.Point(i * length, 0));
+		}
+		this.tongue = this.gameState.add.rope(200, 300, 'chain', null, points);
+		this.tongue.anchor = {x: 0.5, y: 0.5};
+		this.gameState.physics.arcade.enable(this.tongue);
+		this.tongue.gravity = {y: 300};
+		console.debug(this.tongue);
 	},
 
 	update: function() {
