@@ -5,7 +5,7 @@
 
  Falling = function() {};
 
- Falling.prototype = new Level('levels/Falling.csv', 60, 150);
+ Falling.prototype = new Level('levels/Falling.csv', 60, 150, 1415, 280, '1', 'startMenu');
 
 // Overrides the preload function from Level to add update events.
 Falling.prototype.preload = function() {
@@ -17,6 +17,9 @@ Falling.prototype.preload = function() {
 
 // Overrides the update function from Level to add update events.
 Falling.prototype.create = function() {
+	this.levelStateName = '1';
+	this.nextLevelStateName = 'startMenu';
+
 	Level.prototype.create.call(this);
 
 	// Adds a picture of the arrow buttons to show the user that these are used to jump and move left and right

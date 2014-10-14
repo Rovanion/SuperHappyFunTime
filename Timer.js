@@ -1,6 +1,6 @@
 Timer = function(gameState){
 	this.gameState = gameState;
-}
+};
 
 Timer.prototype = {
 	counter: 0,
@@ -32,7 +32,9 @@ Timer.prototype = {
 			else if(this.counter === 1000)
 				this.counterText.cameraOffset.x = 30;
 		}
-		else
+		else {
 			this.counterText.setText(this.counter / 10);
+			finishedLevelTime = this.counter / 10; 
+		}
 	}
-}
+};
