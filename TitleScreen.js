@@ -35,8 +35,8 @@ TitleScreen.prototype = {
 		this.graphics.forEach( function(sprite){
 			delay += 300;
 			sprite.anchor.setTo(0.5, 0.5);
-			game.tweens.create(sprite).from({alpha: 0}, 200, null, true, delay, false, false);
-			game.tweens.create(sprite.scale).from({x: 5, y: 5}, 300, Phaser.Easing.Elastic.Out, true, delay + 50, false, false);
+			this.tweens.create(sprite).from({alpha: 0}, 200, null, true, delay, false, false);
+			this.tweens.create(sprite.scale).from({x: 5, y: 5}, 300, Phaser.Easing.Elastic.Out, true, delay + 50, false, false);
 		}, this);
 
 		// Position all of it in the middle.
