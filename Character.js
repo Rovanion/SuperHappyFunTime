@@ -9,8 +9,6 @@ Character.prototype = {
 	MAX_SPEED: 600,
 	turnedRight: false,
 	jumping: true,
-	// Whether or not the head is rotating to indicate a cooldown.
-	rotating: false,
 
 	preload: function() {
 		this.gameState.load.spritesheet('torso',
@@ -28,7 +26,8 @@ Character.prototype = {
 	create: function(x, y) {
 		this.legs = this.gameState.add.sprite(x, y, 'legs');
 		this.torso = this.gameState.add.sprite(x, y, 'torso');
-		this.torso.indicateCooldown = this.indicateCooldown;
+		// Whether or not the head is rotating to indicate a cooldown.
+		this.torso.rotating = false;
 
 		this.gameState.physics.arcade.enable(this.torso);
 		this.gameState.physics.arcade.enable(this.legs);
