@@ -1,9 +1,9 @@
-Level = function (csvfile, characterStartX, characterStartY, goalstateX, goalstateY) {
+Level = function (csvfile, characterStartX, characterStartY, goalX, goalY) {
 	this.csvfile = csvfile;
 	this.characterStartX = characterStartX;
 	this.characterStartY = characterStartY;
-	this.goalstateX = goalstateX;
-	this.goalstateY = goalstateY;
+	this.goalX = goalX;
+	this.goalY = goalY;
 };
 
 Level.prototype = {
@@ -46,9 +46,9 @@ Level.prototype = {
 		this.bobby.create(this.characterStartX, this.characterStartY);
 		this.timer.create();
 
-		this.goalstate = this.add.sprite(this.goalstateX, this.goalstateY, 'goal');
-		this.goalstate.anchor.setTo(0.5, 0.5);
-		this.physics.arcade.enable(this.goalstate);
+		this.goal = this.add.sprite(this.goalX, this.goalY, 'goal');
+		this.goal.anchor.setTo(0.5, 0.5);
+		this.physics.arcade.enable(this.goal);
 
 		// Register hooks for the number keys to switch between levels.
 		keynames = [ "", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
@@ -63,10 +63,10 @@ Level.prototype = {
 
 	update: function() {
 		this.bobby.update();
-		this.physics.arcade.collide(this.bobby.torso, this.goalstate, this.goalstateReached);
+		this.physics.arcade.collide(this.bobby.torso, this.goal, this.goalReached);
 	},
 
-	goalstateReached: function() {
+	goalReached: function() {
 		game.state.start('betweenLevels', true, false);
 	}
 

@@ -46,14 +46,14 @@ StartMenu.prototype = {
 		for (var i = 0; i < this.choices.length; i++) {
 			this.choices[i] = {};
 			// TODO: Make it so that not every button changes to level 1.
-			this.choices[i].button = this.add.button(0, game.height - 310 + i * 100, 'menyknapp', this.play, this);
+			this.choices[i].button = this.add.button(
+				0, game.height - 310 + i * 100, 'menyknapp', this.play, this
+			);
 			// Trust me, this ain't beautiful.
 			this.choices[i].button.scale.setTo(0.65 + i * i * i * 0.07, 0.65);
 			var that = this;
 			this.choices[i].button.onInputOver.add((function(i) {
-				return function() {
-					that.mouseOver(i);
-				}
+				return function() { that.mouseOver(i); }
 			})(i), this);
 
 			this.choices[i].text = this.add.text(50, game.height - 300 + i*100, "", {
@@ -101,5 +101,4 @@ StartMenu.prototype = {
 		this.choice = i;
 		this.updateTextColor();
 	}
-
 };

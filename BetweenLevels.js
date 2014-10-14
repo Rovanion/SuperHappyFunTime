@@ -1,24 +1,16 @@
 BetweenLevels = function() {
-	//this.time = 0;
-	//this.level = null;
-	//this.nextLevel = null;
 };
 
 BetweenLevels.prototype = {
-
 	preload: function() {
 		this.load.spritesheet('menyknapp', 'assets/menyknapp.png');
 	},
 
 	create: function() {
-
 		this.choice = 0;
-
 		this.loadChoices();
-
 		this.cursors = this.input.keyboard.createCursorKeys();
 		this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-
 		this.updateTextColor();
 
 		var congratulationsText = this.add.text(game.width/2, 100, 'You\'re awesome!', {
@@ -65,8 +57,10 @@ BetweenLevels.prototype = {
 
 		for (var i = 0; i < this.choices.length; i++) {
 			this.choices[i] = {};
-			
-			this.choices[i].button = this.add.button(0, game.height - 310 + i * 100, 'menyknapp', this.play, this);
+
+			this.choices[i].button = this.add.button(
+				0, game.height - 310 + i * 100, 'menyknapp', this.playNext, this
+			);
 			// Trust me, this ain't beautiful.
 			var that = this;
 			this.choices[i].button.onInputOver.add((function(i) {
@@ -89,7 +83,6 @@ BetweenLevels.prototype = {
 				this.choices[i].text.setText("Replay Level");
 				break;
 			}
-
 		}
 		this.choices[0].button.scale.setTo(1.2, 0.65);
 		this.choices[1].button.scale.setTo(1.4, 0.65);
@@ -125,6 +118,5 @@ BetweenLevels.prototype = {
 	 mouseOver: function(i){
 	 	this.choice = i;
 	 	this.updateTextColor();
-	 },
-
+	 }
 };
