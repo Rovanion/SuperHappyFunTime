@@ -12,7 +12,7 @@ HookShot.prototype = {
 	// The hook can only be shot so often
 	cooldown: false,
 	// Defining the length of the cooldown
-	cooldownLength: 500,
+	cooldownLength: 300,
 	// The speed at which the hook draws the character towards its target.
 	speed: 1200,
 
@@ -59,11 +59,7 @@ HookShot.prototype = {
 				this.hook.kill();
 				this.cancelling = false;
 
-				// The cooldown runs out in 2 seconds.
-				var that = this;
-				setTimeout(function() {
-					that.cooldown = false
-				}, this.cooldownLength);
+				this.startCooldown();
 			}
 			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
 			this.hook.body.velocity.x = this.speed * Math.cos(angle);
@@ -86,7 +82,7 @@ HookShot.prototype = {
 			var angle = game.physics.arcade.angleToPointer(this.parent);
 			this.hook.reset(fromX, fromY);
 			this.hook.rotation = game.physics.arcade.moveToPointer(this.hook, this.speed);
-			this.shooting = this.cooldown = true;
+			this.shooting = true;
 		}
 	},
 
@@ -111,5 +107,27 @@ HookShot.prototype = {
 			this.cancelling = true;
 			game.physics.arcade.moveToObject(this.hook, this.parent, 1500);
 		}
+	},
+
+	/**
+	 * Indicate to the user that there is a cooldown going on.
+	 */
+	startCooldown: function(){
+		this.cooldown = this.parent.rotating = true;
+		game.time.events.add(this.cooldownLength, function() {
+			this.cooldown = false;
+			this.parent.rotating = false;
+		}, this);
+
+		// Bobbys head is flung backwards by the force from his tounge hitting his mouth.
+		var halfTurn = -this.parent.rotation - Math.PI;
+		if(this.parent.rotation > Math.PI * 3 / 2 || this.parent.rotation < Math.PI / 2)
+			halfTurn = -halfTurn;
+
+		this.gameState.tweens.create(this.parent).to(
+			{rotation: halfTurn}, this.cooldownLength / 2, null, true)
+			.chain(this.gameState.tweens.create(this.parent).to(
+			{rotation: halfTurn + Math.PI}, this.cooldownLength / 2));
+
 	}
 };
