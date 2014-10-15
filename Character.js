@@ -9,14 +9,12 @@ Character.prototype = {
 	MAX_SPEED: 600,
 	turnedRight: false,
 	jumping: true,
-	// Whether or not the head is rotating to indicate a cooldown.
-	rotating: false,
 
 	preload: function() {
 		this.gameState.load.spritesheet('torso',
-			'assets/character_spritesheet_body.png', 64, 64);
+			'assets/character_spritesheet_body.png', 40, 40);
 		this.gameState.load.spritesheet('legs',
-			'assets/character_spritesheet_legs.png', 64, 30);
+			'assets/character_spritesheet_legs.png', 40, 19);
 
 		this.hookShot = new HookShot(this.gameState);
 		this.hookShot.preload();
@@ -28,7 +26,8 @@ Character.prototype = {
 	create: function(x, y) {
 		this.legs = this.gameState.add.sprite(x, y, 'legs');
 		this.torso = this.gameState.add.sprite(x, y, 'torso');
-		this.torso.indicateCooldown = this.indicateCooldown;
+		// Whether or not the head is rotating to indicate a cooldown.
+		this.torso.rotating = false;
 
 		this.gameState.physics.arcade.enable(this.torso);
 		this.gameState.physics.arcade.enable(this.legs);
@@ -155,7 +154,7 @@ Character.prototype = {
 			}
 		}
 
-		this.legs.body.y = this.torso.body.y + 45;
+		this.legs.body.y = this.torso.body.y + 29;
 		this.legs.body.x = this.torso.body.x;
 	},
 

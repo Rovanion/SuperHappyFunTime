@@ -119,11 +119,17 @@ HookShot.prototype = {
 			this.parent.rotating = false;
 		}, this);
 
-		// Bobbys head is flung backwards by the force from his tounge hitting his mouth.
-		var halfTurn = -this.parent.rotation - Math.PI;
-		if(this.parent.rotation > Math.PI * 3 / 2 || this.parent.rotation < Math.PI / 2)
-			halfTurn = -halfTurn;
+		// If turned to the left
+		if(this.parent.animations.frame === 0){
+			var firstTurn = this.parent.rotation + Math.PI;
+			var secondTurn = this.parent.rotation + 2 * Math.PI;
+		}
+		else{
+			var firstTurn = this.parent.rotation - Math.PI;
+			var secondTurn = this.parent.rotation - 2 * Math.PI;
+		}
 
+		// Bobbys head is flung backwards by the force from his tounge hitting his mouth.
 		this.gameState.tweens.create(this.parent).to(
 			{rotation: halfTurn}, this.cooldownLength / 2, null, true)
 			.chain(this.gameState.tweens.create(this.parent).to(
