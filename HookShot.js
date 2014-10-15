@@ -49,9 +49,13 @@ HookShot.prototype = {
 				this.cancelHook();
 		}
 		else if(this.pulling){
+			var speed = this.speed - 3 * (400 - distance);
+			console.debug(speed);
 			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
-			this.parent.body.velocity.x = -this.speed * Math.cos(angle);
-			this.parent.body.velocity.y = -this.speed * Math.sin(angle);
+
+			this.parent.body.velocity.x -= speed * Math.cos(angle);
+			this.parent.body.velocity.y -= speed * Math.sin(angle);
+
 		}
 		else if(this.cancelling){
 			if(Phaser.Math.fuzzyEqual(distance, 0, 120)) {
@@ -91,7 +95,7 @@ HookShot.prototype = {
 	 */
 	hit: function() {
 		this.hook.body.velocity.x =	this.hook.body.velocity.y = 0;
-
+		this.parent.body.velocity.x =	this.parent.body.velocity.y = 0;
 		// Will make the update function pull the parent toward the goal until reached.
 		this.pulling = true;
 		this.shooting = false;
