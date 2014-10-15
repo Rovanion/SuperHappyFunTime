@@ -4,6 +4,7 @@ Level = function (csvfile, characterStartX, characterStartY, goalX, goalY) {
 	this.characterStartY = characterStartY;
 	this.goalX = goalX;
 	this.goalY = goalY;
+	this.panoramaFinished = false;
 };
 
 Level.prototype = {
@@ -44,11 +45,16 @@ Level.prototype = {
 		map.setCollisionBetween(0, 0);
 
 		this.bobby.create(this.characterStartX, this.characterStartY);
-		this.timer.create();
 
 		this.goal = this.add.sprite(this.goalX, this.goalY, 'goal');
 		this.goal.anchor.setTo(0.5, 0.5);
 		this.physics.arcade.enable(this.goal);
+
+		// Pans the level beginning at the goal and ending at Bobby
+		this.panorama = this.tweens.create(this.camera).from({x: this.goal.x, y: this.goal.y}, 3000, Phaser.Easing.Quadratic.InOut, true);
+		this.panorama.onComplete.add(this.panoramaCompleted, this);
+
+		this.timer.create();
 
 		// Register hooks for the number keys to switch between levels.
 		keynames = [ "", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
@@ -62,12 +68,24 @@ Level.prototype = {
 	},
 
 	update: function() {
-		this.bobby.update();
-		this.physics.arcade.collide(this.bobby.torso, this.goal, this.goalReached);
+		if (this.panoramaFinished) {
+			this.bobby.update();
+			this.physics.arcade.collide(this.bobby.torso, this.goal, this.goalReached);
+		}
 	},
 
 	goalReached: function() {
 		game.state.start('betweenLevels', true, false);
+	},
+
+	/**
+	 * When the panorama view is completed bobbys update function starts running and the camera is set to follow bobby again.
+	 */
+	panoramaCompleted: function() {
+		this.bobby.enableGravity();
+		this.panoramaFinished = true;
+		this.timer.started = true;
+		this.camera.follow(this.bobby.torso);
 	}
 
 };

@@ -10,6 +10,7 @@ Character.prototype = {
 	MAX_SPEED_PULLING: 600,
 	turnedRight: false,
 	jumping: true,
+	panoramaview: true,
 
 	preload: function() {
 		this.gameState.load.spritesheet('torso',
@@ -33,8 +34,6 @@ Character.prototype = {
 		this.gameState.physics.arcade.enable(this.torso);
 		this.gameState.physics.arcade.enable(this.legs);
 
-		this.torso.body.gravity.y = this.GRAVITY;
-
 		this.torso.anchor.setTo(0.5, 0.5);
 		this.legs.anchor.setTo(0.5, 0.5);
 
@@ -54,7 +53,6 @@ Character.prototype = {
 		this.torso.events.onOutOfBounds.add(this.characterOutsideWorld);
 
 		this.hookShot.create(this.torso);
-		this.gameState.camera.follow(this.torso);
 	},
 
 	update: function() {
@@ -162,6 +160,10 @@ Character.prototype = {
 	},
 
 	characterOutsideWorld : function() {
-		game.state.restart(game.state.current);
+		//game.state.restart(game.state.current);
+	},
+
+	enableGravity: function() {
+		this.torso.body.gravity.y = this.GRAVITY;
 	}
 };
