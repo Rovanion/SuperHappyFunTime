@@ -55,13 +55,18 @@ BetweenLevels.prototype = {
 	loadChoices: function() {
 		this.choices = [this.playNextText, this.replayText];
 
-		for (var i = 0; i < this.choices.length; i++) {
-			this.choices[i] = {};
+		this.choices[0] = {};
+		this.choices[1] = {};
 
-			this.choices[i].button = this.add.button(
-				0, game.height - 310 + i * 100, 'menyknapp', this.playNext, this
-			);
-			// Trust me, this ain't beautiful.
+		this.choices[0].button = this.add.button(
+			0, game.height - 310 + 0 * 100, 'menyknapp', this.playNext, this
+		);
+		this.choices[1].button = this.add.button(
+			0, game.height - 310 + 1 * 100, 'menyknapp', this.replay, this
+		);
+
+		for (var i = 0; i < this.choices.length; i++) {
+
 			var that = this;
 			this.choices[i].button.onInputOver.add((function(i) {
 				return function() {
@@ -101,22 +106,22 @@ BetweenLevels.prototype = {
 	/**
 	 * Fired when the play next button is pressed.
 	 */
-	 playNext: function(){
-	 	game.state.start(nextLevel);
-	 },
+	playNext: function(){
+		game.state.start(nextLevel);
+	},
 
 	/**
 	 * Fired when the replay button is pressed.
 	 */
-	 replay: function() {
-	 	game.state.start(currentLevel);
-	 },
+	replay: function() {
+		game.state.start(currentLevel);
+	},
 
 	/**
 	 * Fired when the active pointer enters a button.
 	 */
-	 mouseOver: function(i){
-	 	this.choice = i;
-	 	this.updateTextColor();
-	 }
+	mouseOver: function(i){
+		this.choice = i;
+		this.updateTextColor();
+	},
 };
