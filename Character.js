@@ -6,7 +6,8 @@ Character.prototype = {
 	GRAVITY: 900,
 	ACCELERATION: 50,
 	JUMP_ACCELERATION: -350,
-	MAX_SPEED: 600,
+	MAX_SPEED: 300,
+	MAX_SPEED_PULLING: 600,
 	turnedRight: false,
 	jumping: true,
 
@@ -23,9 +24,9 @@ Character.prototype = {
 	/**
 	 * The initial position of the Character in world coordinates x, y.
 	 */
-	create: function(x, y) {
-		this.legs = this.gameState.add.sprite(x, y, 'legs');
-		this.torso = this.gameState.add.sprite(x, y, 'torso');
+	 create: function(x, y) {
+	 	this.legs = this.gameState.add.sprite(x, y, 'legs');
+	 	this.torso = this.gameState.add.sprite(x, y, 'torso');
 		// Whether or not the head is rotating to indicate a cooldown.
 		this.torso.rotating = false;
 
@@ -83,14 +84,26 @@ Character.prototype = {
 		}
 
 		// Enforce the max speed
-		if (this.torso.body.velocity.x >= this.MAX_SPEED) {
-			this.torso.body.velocity.x = this.MAX_SPEED;
-		}
-		else if (this.torso.body.velocity.x <= -this.MAX_SPEED) {
-			this.torso.body.velocity.x = -this.MAX_SPEED;
-		}
-		if (this.torso.body.velocity.y <= -this.MAX_SPEED) {
-			this.torso.body.velocity.y = -this.MAX_SPEED;
+		if (!this.hookShot.pulling) {
+			if (this.torso.body.velocity.x >= this.MAX_SPEED) {
+				this.torso.body.velocity.x = this.MAX_SPEED;
+			}
+			else if (this.torso.body.velocity.x <= -this.MAX_SPEED) {
+				this.torso.body.velocity.x = -this.MAX_SPEED;
+			}
+			if (this.torso.body.velocity.y <= -this.MAX_SPEED) {
+				this.torso.body.velocity.y = -this.MAX_SPEED;
+			}
+		} else {
+			if (this.torso.body.velocity.x >= this.MAX_SPEED_PULLING) {
+				this.torso.body.velocity.x = this.MAX_SPEED_PULLING;
+			}
+			else if (this.torso.body.velocity.x <= -this.MAX_SPEED_PULLING) {
+				this.torso.body.velocity.x = -this.MAX_SPEED_PULLING;
+			}
+			if (this.torso.body.velocity.y <= -this.MAX_SPEED_PULLING) {
+				this.torso.body.velocity.y = -this.MAX_SPEED_PULLING;
+			}
 		}
 
 		if (this.torso.body.blocked.down) {
@@ -132,7 +145,7 @@ Character.prototype = {
 			this.hookShot.shoot(
 				this.torso.x + 110 * Math.sin(angle),
 				this.torso.y + 110 * Math.cos(angle)
-			);
+				);
 		}
 		else if (game.input.activePointer.isUp && this.hookShot.shooting || this.hookShot.pulling){
 			this.hookShot.cancelHook();
