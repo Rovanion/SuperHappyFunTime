@@ -22,38 +22,28 @@ HookShot.prototype = {
 	 */
 	preload: function() {
 		this.gameState.load.image('hook', 'assets/hook.png');
-		this.gameState.load.image('chain', 'assets/chain.png');
+		this.gameState.load.image('tounge', 'assets/tounge.png');
 	},
 
 	create: function(parent) {
 		this.parent = parent;
 		this.hook = this.gameState.add.sprite(-100, -100, 'hook');
 		this.gameState.physics.arcade.enable(this.hook);
-		this.hook.anchor.setTo(0.1, 0.5);
+		this.hook.anchor.setTo(0.1, 0);
 
-		this.chain = this.gameState.add.sprite(0, 0, 'chain');
-		this.hook.addChild(this.chain);
-		this.chain.anchor.setTo(1, 0.5);
-
-		var length = 918/20;
-		var points = [];
-		for (var i = 0; i < 20; i++) {
-			points.push(new Phaser.Point(i * length, 0));
-		}
-		this.tongue = this.gameState.add.rope(200, 300, 'chain', null, points);
-		this.tongue.anchor = {x: 0.5, y: 0.5};
-		this.gameState.physics.arcade.enable(this.tongue);
-		this.tongue.gravity = {y: 300};
-		console.debug(this.tongue);
+		this.tounge = this.gameState.add.tileSprite(0, 0, 0, 10, 'tounge');
+		this.tounge.anchor.setTo(1, 0);
+		this.hook.addChild(this.tounge);
 	},
 
 	update: function() {
+		var distance = game.physics.arcade.distanceBetween(this.hook, this.parent);
+		this.tounge.width = distance - 8;
 		// We're either shooting the hook, pulling the character towards a target,
 		// cancelling a failed shot or doing nothing.
 		if(this.shooting){
 			this.gameState.physics.arcade.collide(
 				this.hook, this.gameState.layer, this.hit, null, this);
-			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent);
 
 			if (distance > 400)
 				this.cancelHook();
@@ -61,11 +51,9 @@ HookShot.prototype = {
 		else if(this.pulling){
 			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
 			this.parent.body.velocity.x = -this.speed * Math.cos(angle);
-
 			this.parent.body.velocity.y = -this.speed * Math.sin(angle);
 		}
 		else if(this.cancelling){
-			var distance = game.physics.arcade.distanceBetween(this.hook, this.parent);
 			if(Phaser.Math.fuzzyEqual(distance, 0, 120)) {
 				this.hook.kill();
 				this.cancelling = false;
@@ -75,25 +63,26 @@ HookShot.prototype = {
 			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
 			this.hook.body.velocity.x = this.speed * Math.cos(angle);
 			this.hook.body.velocity.y = this.speed * Math.sin(angle);
+			this.tounge.width -= 38;
 		}
 		else
 			return;
 
-		this.hook.angle = 180 + Phaser.Math.radToDeg(
-			game.physics.arcade.angleBetween(this.hook, this.parent));
-
+		this.hook.rotation = Math.PI + game.physics.arcade.angleBetween(this.hook, this.parent);
 	},
 
 	/**
 	 * Shoot the hookshot from one position to the mouse.
-	 * The hook is shot from, well, fromX and fromY.
+	 * The hook is shot from fromX and fromY with the angle angle.
 	 */
-	shoot: function(fromX, fromY) {
+	shoot: function(fromX, fromY, angle) {
 		if (!this.shooting && !this.pulling && !this.cancelling && !this.cooldown){
-			var angle = game.physics.arcade.angleToPointer(this.parent);
+			this.hook.rotation = angle;
 			this.hook.reset(fromX, fromY);
-			this.hook.rotation = game.physics.arcade.moveToPointer(this.hook, this.speed);
 			this.shooting = true;
+
+			this.hook.body.velocity.x = this.speed * Math.cos(angle);
+			this.hook.body.velocity.y = this.speed * Math.sin(angle);
 		}
 	},
 
@@ -138,7 +127,6 @@ HookShot.prototype = {
 		this.gameState.tweens.create(this.parent).to(
 			{rotation: halfTurn}, this.cooldownLength / 2, null, true)
 			.chain(this.gameState.tweens.create(this.parent).to(
-			{rotation: halfTurn + Math.PI}, this.cooldownLength / 2));
-
+				{rotation: halfTurn + Math.PI}, this.cooldownLength / 2));
 	}
 };

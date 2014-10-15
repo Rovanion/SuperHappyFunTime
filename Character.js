@@ -131,9 +131,12 @@ Character.prototype = {
 		// Shoot on mouseDown, cancel on mouseUp
 		if (game.input.activePointer.isDown){
 			this.hookShot.shoot(
-				this.torso.x + 110 * Math.sin(angle),
-				this.torso.y + 110 * Math.cos(angle)
+				this.torso.x + 10 * Math.sin(angle),
+				this.torso.y + 10 * Math.cos(angle),
+				game.physics.arcade.angleToPointer(this.torso)
 			);
+			// To lock the head from following the mouse.
+			this.torso.rotating = true;
 		}
 		else if (game.input.activePointer.isUp && this.hookShot.shooting || this.hookShot.pulling){
 			this.hookShot.cancelHook();
