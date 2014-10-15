@@ -13,9 +13,9 @@ Character.prototype = {
 
 	preload: function() {
 		this.gameState.load.spritesheet('torso',
-			'assets/character_spritesheet_body.png', 64, 64);
+			'assets/character_spritesheet_body.png', 40, 40);
 		this.gameState.load.spritesheet('legs',
-			'assets/character_spritesheet_legs.png', 64, 30);
+			'assets/character_spritesheet_legs.png', 40, 19);
 
 		this.hookShot = new HookShot(this.gameState);
 		this.hookShot.preload();
@@ -24,9 +24,9 @@ Character.prototype = {
 	/**
 	 * The initial position of the Character in world coordinates x, y.
 	 */
-	 create: function(x, y) {
-	 	this.legs = this.gameState.add.sprite(x, y, 'legs');
-	 	this.torso = this.gameState.add.sprite(x, y, 'torso');
+	create: function(x, y) {
+		this.legs = this.gameState.add.sprite(x, y, 'legs');
+		this.torso = this.gameState.add.sprite(x, y, 'torso');
 		// Whether or not the head is rotating to indicate a cooldown.
 		this.torso.rotating = false;
 
@@ -145,7 +145,7 @@ Character.prototype = {
 			this.hookShot.shoot(
 				this.torso.x + 110 * Math.sin(angle),
 				this.torso.y + 110 * Math.cos(angle)
-				);
+			);
 		}
 		else if (game.input.activePointer.isUp && this.hookShot.shooting || this.hookShot.pulling){
 			this.hookShot.cancelHook();
@@ -164,7 +164,7 @@ Character.prototype = {
 			}
 		}
 
-		this.legs.body.y = this.torso.body.y + 45;
+		this.legs.body.y = this.torso.body.y + 29;
 		this.legs.body.x = this.torso.body.x;
 	},
 
