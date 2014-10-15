@@ -12,9 +12,9 @@ Character.prototype = {
 
 	preload: function() {
 		this.gameState.load.spritesheet('torso',
-			'assets/character_spritesheet_body.png', 64, 64);
+			'assets/character_spritesheet_body.png', 40, 40);
 		this.gameState.load.spritesheet('legs',
-			'assets/character_spritesheet_legs.png', 64, 30);
+			'assets/character_spritesheet_legs.png', 40, 19);
 
 		this.hookShot = new HookShot(this.gameState);
 		this.hookShot.preload();
@@ -151,7 +151,7 @@ Character.prototype = {
 			}
 		}
 
-		this.legs.body.y = this.torso.body.y + 45;
+		this.legs.body.y = this.torso.body.y + 29;
 		this.legs.body.x = this.torso.body.x;
 	},
 
