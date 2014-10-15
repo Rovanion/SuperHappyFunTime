@@ -6,7 +6,7 @@ Character.prototype = {
 	GRAVITY: 900,
 	ACCELERATION: 50,
 	JUMP_ACCELERATION: -350,
-	MAX_SPEED: 300,
+	MAX_SPEED: 350,
 	MAX_SPEED_PULLING: 600,
 	turnedRight: false,
 	jumping: true,
@@ -84,26 +84,19 @@ Character.prototype = {
 		}
 
 		// Enforce the max speed
-		if (!this.hookShot.pulling) {
-			if (this.torso.body.velocity.x >= this.MAX_SPEED) {
-				this.torso.body.velocity.x = this.MAX_SPEED;
-			}
-			else if (this.torso.body.velocity.x <= -this.MAX_SPEED) {
-				this.torso.body.velocity.x = -this.MAX_SPEED;
-			}
-			if (this.torso.body.velocity.y <= -this.MAX_SPEED) {
-				this.torso.body.velocity.y = -this.MAX_SPEED;
-			}
-		} else {
-			if (this.torso.body.velocity.x >= this.MAX_SPEED_PULLING) {
-				this.torso.body.velocity.x = this.MAX_SPEED_PULLING;
-			}
-			else if (this.torso.body.velocity.x <= -this.MAX_SPEED_PULLING) {
-				this.torso.body.velocity.x = -this.MAX_SPEED_PULLING;
-			}
-			if (this.torso.body.velocity.y <= -this.MAX_SPEED_PULLING) {
-				this.torso.body.velocity.y = -this.MAX_SPEED_PULLING;
-			}
+		if (!this.hookShot.pulling)
+			var speed = this.MAX_SPEED;
+		else
+			var speed = this.MAX_SPEED_PULLING;
+
+		if (this.torso.body.velocity.x >= speed) {
+			this.torso.body.velocity.x = speed;
+		}
+		else if (this.torso.body.velocity.x <= -speed) {
+			this.torso.body.velocity.x = -speed;
+		}
+		if (this.torso.body.velocity.y <= -speed) {
+			this.torso.body.velocity.y = -speed;
 		}
 
 		if (this.torso.body.blocked.down) {
