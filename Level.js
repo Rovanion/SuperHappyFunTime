@@ -51,7 +51,8 @@ Level.prototype = {
 		this.physics.arcade.enable(this.goal);
 
 		// Pans the level beginning at the goal and ending at Bobby
-		this.panorama = this.tweens.create(this.camera).from({x: this.goal.x, y: this.goal.y}, 3000, Phaser.Easing.Quadratic.InOut, true);
+		this.panorama = this.tweens.create(this.camera).from(
+			{x: this.goal.x, y: this.goal.y}, 3000, Phaser.Easing.Quintic.InOut, true, 200);
 		this.panorama.onComplete.add(this.panoramaCompleted, this);
 
 		this.timer.create();
