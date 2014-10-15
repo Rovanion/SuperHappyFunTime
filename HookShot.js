@@ -38,7 +38,7 @@ HookShot.prototype = {
 
 	update: function() {
 		var distance = game.physics.arcade.distanceBetween(this.hook, this.parent);
-		this.tounge.width = distance - 8;
+		this.tounge.width = distance + 6;
 		// We're either shooting the hook, pulling the character towards a target,
 		// cancelling a failed shot or doing nothing.
 		if(this.shooting){
@@ -131,8 +131,8 @@ HookShot.prototype = {
 
 		// Bobbys head is flung backwards by the force from his tounge hitting his mouth.
 		this.gameState.tweens.create(this.parent).to(
-			{rotation: halfTurn}, this.cooldownLength / 2, null, true)
-			.chain(this.gameState.tweens.create(this.parent).to(
-				{rotation: halfTurn + Math.PI}, this.cooldownLength / 2));
+			{rotation: firstTurn}, this.cooldownLength / 4, null, true).chain(
+				this.gameState.tweens.create(this.parent).to(
+					{rotation: secondTurn}, this.cooldownLength / 4 * 3, Phaser.Easing.Sinusoidal.Out));
 	}
 };
