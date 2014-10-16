@@ -16,9 +16,13 @@ HookShot.prototype = {
 	// The speed at which the hook draws the character towards its target.
 	hookSpeed: 1200,
 	// The speed at which the parent is pulled towards the target on hit.
-	pullSpeed: 25,
+	pullSpeed: 30,
 	// The maximum length of the hook.
 	maxHookLength: 400,
+	// The dead zone around the target of the hookshot in which no force is applied.
+	deadZone: 2,
+	// Adjusts the agressiveness of the pull force curve.
+	calmness: 10,
 
 	/**
 	 * Function which should be called before the class is used in
@@ -54,11 +58,10 @@ HookShot.prototype = {
 			this.tounge.width = distance + 2;
 		}
 		else if(this.pulling){
-			// Adjusts the agressivity of the pull force curve.
-			var calmness = 12;
+
 			// Adjusts the dead zone around the target.
-			var deadZone = 3;
-			var speed = this.pullSpeed * Math.log(distance / calmness - deadZone);
+
+			var speed = this.pullSpeed * Math.log(distance / this.calmness - this.deadZone);
 			if (isNaN(speed) || speed < 0)
 				speed = 0;
 			console.debug("distance: " + distance + "test: " + speed);

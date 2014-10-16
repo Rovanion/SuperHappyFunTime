@@ -3,9 +3,9 @@ Character = function(gameState) {
 };
 
 Character.prototype = {
-	GRAVITY: 1200,
+	GRAVITY: 1300,
 	ACCELERATION: 75,
-	JUMP_ACCELERATION: -400,
+	JUMP_ACCELERATION: -500,
 	MAX_SPEED: 500,
 	turnedRight: false,
 	jumping: true,
@@ -33,7 +33,7 @@ Character.prototype = {
 		this.torso.rotating = false;
 
 		this.gameState.physics.arcade.enable(this.torso);
-		this.torso.body.drag = {x: 300, y: 300};
+		this.torso.body.drag = {x: 500, y: 500};
 
 		// Define the animations
 		this.legs.animations.add('left', [ 0, 1, 2, 3 ], 15);
