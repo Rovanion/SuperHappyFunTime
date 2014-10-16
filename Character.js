@@ -63,13 +63,15 @@ Character.prototype = {
 
 		this.hookShot.update();
 
+		this.enableWASD();
+
 		// Walk left and right
 		var accel = 0;
-		if (cursors.right.isDown) {
+		if (this.cursors.right.pressed) {
 			accel = this.ACCELERATION;
 			this.legs.animations.play('right');
 			this.turnedRight = true;
-		} else if (cursors.left.isDown) {
+		} else if (this.cursors.left.pressed) {
 			accel = -this.ACCELERATION;
 			this.legs.animations.play('left');
 			this.turnedRight = false;
@@ -106,7 +108,7 @@ Character.prototype = {
 		// Slow down bobby if he's touching any surface.
 		if (this.torso.body.blocked.down || this.torso.body.blocked.up
 				|| this.torso.body.blocked.left || this.torso.body.blocked.right) {
-			if (!cursors.left.isDown && !cursors.right.isDown) {
+			if (!this.cursors.left.pressed && !this.cursors.right.pressed) {
 				this.torso.body.velocity.x -= this.torso.body.velocity.x / 6;
 			}
 		}
@@ -123,7 +125,7 @@ Character.prototype = {
 			}
 
 			// Jump bobby, jump!
-			if (cursors.up.isDown) {
+			if (this.cursors.up.pressed) {
 				this.jumping = true;
 				this.turnedWhileJumping = false;
 				this.torso.body.velocity.y = this.JUMP_ACCELERATION;
@@ -172,5 +174,14 @@ Character.prototype = {
 
 	enableGravity: function() {
 		this.torso.body.gravity.y = this.GRAVITY;
+	},
+
+	enableWASD: function() {
+		var rightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+		this.cursors.right.pressed = rightKey.isDown || cursors.right.isDown;
+		var leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+		this.cursors.left.pressed = leftKey.isDown || cursors.left.isDown;
+		var upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+		this.cursors.up.pressed = upKey.isDown || cursors.up.isDown;
 	}
 };
