@@ -3,12 +3,12 @@
  * jumping and reaching a goal using the hookshot.
  */
 
- Falling = function() {};
+ Level1 = function() {};
 
- Falling.prototype = new Level('levels/Falling.csv', 60, 150, 1415, 280, '1', 'startMenu');
+ Level1.prototype = new Level('levels/level1.csv', 80, 400, 1415, 280);
 
 // Overrides the preload function from Level to add update events.
-Falling.prototype.preload = function() {
+Level1.prototype.preload = function() {
 	Level.prototype.preload.call(this);
 
 	this.load.spritesheet('arrow_buttons', 'assets/arrows.png', 100, 66);
@@ -16,9 +16,9 @@ Falling.prototype.preload = function() {
 };
 
 // Overrides the update function from Level to add update events.
-Falling.prototype.create = function() {
+Level1.prototype.create = function() {
 	this.levelStateName = '1';
-	this.nextLevelStateName = 'startMenu';
+	this.nextLevelStateName = '2';
 
 	Level.prototype.create.call(this);
 
@@ -55,7 +55,7 @@ Falling.prototype.create = function() {
 	this.mouse.anchor.setTo(0.5, 0.5);
 	this.mouse.animations.add('blinking', [0, 1], 1);
 
-	this.mouseText = this.add.text(this.mouse.x, this.mouse.y - 80, 'Hold to Hookshot', {
+	this.mouseText = this.add.text(this.mouse.x, this.mouse.y - 80, 'Hold to Lick', {
 		font: "20px Verdana",
 		fill: "#000",
 		align: "center"
@@ -66,7 +66,7 @@ Falling.prototype.create = function() {
 
 
 // Overrides the update function from Level to add update events.
-Falling.prototype.update = function() {
+Level1.prototype.update = function() {
 	Level.prototype.update.call(this);
 
 	this.arrowkeys.animations.play('blinking');
