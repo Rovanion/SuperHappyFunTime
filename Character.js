@@ -30,12 +30,11 @@ Character.prototype = {
 		this.torso.rotating = false;
 
 		this.gameState.physics.arcade.enable(this.torso);
-		this.gameState.physics.arcade.enable(this.legs);
 
 		this.torso.body.gravity.y = this.GRAVITY;
 
 		this.torso.anchor.setTo(0.5, 0.5);
-		this.legs.anchor.setTo(0.5, 0.5);
+		this.legs.anchor.setTo(0, 0);
 
 		// Define the animations
 		this.legs.animations.add('left', [ 0, 1, 2, 3 ], 15);
@@ -133,8 +132,8 @@ Character.prototype = {
 		// Shoot on mouseDown, cancel on mouseUp
 		if (game.input.activePointer.isDown){
 			this.hookShot.shoot(
-				this.torso.x + 10 * Math.sin(angle),
-				this.torso.y + 10 * Math.cos(angle),
+				this.torso.x + 20 * Math.sin(angle),
+				this.torso.y + 20 * Math.cos(angle),
 				game.physics.arcade.angleToPointer(this.torso)
 			);
 			// To lock the head from following the mouse.
@@ -157,8 +156,8 @@ Character.prototype = {
 			}
 		}
 
-		this.legs.body.y = this.torso.body.y + 29;
-		this.legs.body.x = this.torso.body.x;
+		this.legs.position.y = this.torso.body.y + 29;
+		this.legs.position.x = this.torso.body.x;
 	},
 
 	characterOutsideWorld : function() {
