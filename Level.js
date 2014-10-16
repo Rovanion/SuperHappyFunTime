@@ -51,6 +51,8 @@ Level.prototype = {
 		this.goal = this.add.sprite(this.goalX, this.goalY, 'goal');
 		this.goal.anchor.setTo(0.5, 0.5);
 		this.physics.arcade.enable(this.goal);
+		this.physics.arcade.TILE_BIAS = 50;
+		console.debug(game.time.fps);
 
 		// Only pan the level the first time you run it.
 		if(this.firstTimeRun) {

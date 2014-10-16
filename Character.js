@@ -32,10 +32,9 @@ Character.prototype = {
 		this.torso.rotating = false;
 
 		this.gameState.physics.arcade.enable(this.torso);
-		this.gameState.physics.arcade.enable(this.legs);
 
 		this.torso.anchor.setTo(0.5, 0.5);
-		this.legs.anchor.setTo(0.5, 0.5);
+		this.legs.anchor.setTo(0, 0);
 
 		// Define the animations
 		this.legs.animations.add('left', [ 0, 1, 2, 3 ], 15);
@@ -90,15 +89,14 @@ Character.prototype = {
 		else
 			var speed = this.MAX_SPEED_PULLING;
 
-		if (this.torso.body.velocity.x >= speed) {
+		if (this.torso.body.velocity.x >= speed)
 			this.torso.body.velocity.x = speed;
-		}
-		else if (this.torso.body.velocity.x <= -speed) {
+		else if (this.torso.body.velocity.x <= -speed)
 			this.torso.body.velocity.x = -speed;
-		}
-		if (this.torso.body.velocity.y <= -speed) {
+		if (this.torso.body.velocity.y >= speed)
+			this.torso.body.velocity.y = speed;
+		else if (this.torso.body.velocity.y <= -speed)
 			this.torso.body.velocity.y = -speed;
-		}
 
 		// Avoid nasty errors.
 		if (isNaN(this.torso.body.velocity.x)) {
@@ -140,8 +138,8 @@ Character.prototype = {
 		// Shoot on mouseDown, cancel on mouseUp
 		if (game.input.activePointer.isDown){
 			this.hookShot.shoot(
-				this.torso.x + 10 * Math.sin(angle),
-				this.torso.y + 10 * Math.cos(angle),
+				this.torso.x + 20 * Math.sin(angle),
+				this.torso.y + 20 * Math.cos(angle),
 				game.physics.arcade.angleToPointer(this.torso)
 			);
 			// To lock the head from following the mouse.
@@ -164,8 +162,8 @@ Character.prototype = {
 			}
 		}
 
-		this.legs.body.y = this.torso.body.y + 29;
-		this.legs.body.x = this.torso.body.x;
+		this.legs.position.y = this.torso.body.y + 29;
+		this.legs.position.x = this.torso.body.x;
 	},
 
 	characterOutsideWorld : function() {
