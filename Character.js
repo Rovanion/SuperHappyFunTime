@@ -3,14 +3,12 @@ Character = function(gameState) {
 };
 
 Character.prototype = {
-	GRAVITY: 900,
-	ACCELERATION: 50,
-	JUMP_ACCELERATION: -350,
-	MAX_SPEED: 350,
-	MAX_SPEED_PULLING: 600,
+	GRAVITY: 1300,
+	ACCELERATION: 75,
+	JUMP_ACCELERATION: -500,
+	MAX_SPEED: 500,
 	turnedRight: false,
 	jumping: true,
-	panoramaview: true,
 
 	preload: function() {
 		this.gameState.load.spritesheet('torso',
@@ -27,14 +25,15 @@ Character.prototype = {
 	 */
 	create: function(x, y) {
 		this.legs = this.gameState.add.sprite(x, y, 'legs');
+		this.legs.anchor.setTo(0, 0);
+
 		this.torso = this.gameState.add.sprite(x, y, 'torso');
+		this.torso.anchor.setTo(0.5, 0.5);
 		// Whether or not the head is rotating to indicate a cooldown.
 		this.torso.rotating = false;
 
 		this.gameState.physics.arcade.enable(this.torso);
-
-		this.torso.anchor.setTo(0.5, 0.5);
-		this.legs.anchor.setTo(0, 0);
+		this.torso.body.drag = {x: 500, y: 500};
 
 		// Define the animations
 		this.legs.animations.add('left', [ 0, 1, 2, 3 ], 15);
@@ -62,39 +61,26 @@ Character.prototype = {
 
 		this.enableWASD();
 
-		// Walk left and right
+		// Walk or run left and right.
 		var accel = 0;
-		if (this.cursors.right.pressed) {
-			accel = this.ACCELERATION;
-			this.legs.animations.play('right');
-			this.turnedRight = true;
-		} else if (this.cursors.left.pressed) {
-			accel = -this.ACCELERATION;
-			this.legs.animations.play('left');
-			this.turnedRight = false;
+		if (!this.hookShot.pulling){
+			if (this.cursors.right.pressed) {
+				accel = this.ACCELERATION;
+				this.legs.animations.play('right');
+				this.turnedRight = true;
+			} else if (this.cursors.left.pressed) {
+				accel = -this.ACCELERATION;
+				this.legs.animations.play('left');
+				this.turnedRight = false;
+			}
 		}
 
 		if (this.torso.body.blocked.down) {
 			this.torso.body.velocity.x += accel;
 		}
 		else {
-			this.torso.body.velocity.x += accel / 2;
+			this.torso.body.velocity.x += accel / 4;
 		}
-
-		// Enforce the max speed
-		if (!this.hookShot.pulling)
-			var speed = this.MAX_SPEED;
-		else
-			var speed = this.MAX_SPEED_PULLING;
-
-		if (this.torso.body.velocity.x >= speed)
-			this.torso.body.velocity.x = speed;
-		else if (this.torso.body.velocity.x <= -speed)
-			this.torso.body.velocity.x = -speed;
-		if (this.torso.body.velocity.y >= speed)
-			this.torso.body.velocity.y = speed;
-		else if (this.torso.body.velocity.y <= -speed)
-			this.torso.body.velocity.y = -speed;
 
 		// Avoid nasty errors.
 		if (isNaN(this.torso.body.velocity.x)) {
@@ -104,9 +90,7 @@ Character.prototype = {
 		// Slow down bobby if he's touching any surface.
 		if (this.torso.body.blocked.down || this.torso.body.blocked.up
 				|| this.torso.body.blocked.left || this.torso.body.blocked.right) {
-			if (!this.cursors.left.pressed && !this.cursors.right.pressed) {
-				this.torso.body.velocity.x -= this.torso.body.velocity.x / 6;
-			}
+			this.torso.body.velocity.x -= this.torso.body.velocity.x / 10;
 		}
 
 		if(this.torso.body.blocked.down){
@@ -158,6 +142,18 @@ Character.prototype = {
 				this.torso.animations.frame = 1;
 				this.torso.rotation = -angle - Math.PI;
 			}
+		}
+
+		// Enforce the max speed
+		if(!this.hookShot.pulling){
+			if (this.torso.body.velocity.x >= this.MAX_SPEED)
+				this.torso.body.velocity.x = this.MAX_SPEED;
+			else if (this.torso.body.velocity.x <= -this.MAX_SPEED)
+				this.torso.body.velocity.x = -this.MAX_SPEED;
+			if (this.torso.body.velocity.y >= this.MAX_SPEED)
+				this.torso.body.velocity.y = this.MAX_SPEED;
+			else if (this.torso.body.velocity.y <= -this.MAX_SPEED)
+				this.torso.body.velocity.y = -this.MAX_SPEED
 		}
 
 		this.legs.position.y = this.torso.body.y + 29;

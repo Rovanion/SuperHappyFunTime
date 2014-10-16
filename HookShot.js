@@ -12,13 +12,17 @@ HookShot.prototype = {
 	// The hook can only be shot so often
 	cooldown: false,
 	// Defining the length of the cooldown
-	cooldownLength: 300,
+	cooldownLength: 500,
 	// The speed at which the hook draws the character towards its target.
 	hookSpeed: 1200,
 	// The speed at which the parent is pulled towards the target on hit.
-	pullSpeed: 400,
+	pullSpeed: 30,
 	// The maximum length of the hook.
 	maxHookLength: 400,
+	// The dead zone around the target of the hookshot in which no force is applied.
+	deadZone: 2,
+	// Adjusts the agressiveness of the pull force curve.
+	calmness: 10,
 
 	/**
 	 * Function which should be called before the class is used in
@@ -42,7 +46,7 @@ HookShot.prototype = {
 
 	update: function() {
 		var distance = game.physics.arcade.distanceBetween(this.hook, this.parent);
-		this.tounge.width = distance - 38;
+		this.tounge.width = distance - 16;
 		// We're either shooting the hook, pulling the character towards
 		// a target, cancelling a failed shot or doing nothing.
 		if(this.shooting){
@@ -54,12 +58,13 @@ HookShot.prototype = {
 			this.tounge.width = distance + 2;
 		}
 		else if(this.pulling){
-			// Accelerate towards the target, decrease until 30 units
-			// from target where hookSpeed should reach 0.
-			var speed = this.pullSpeed - (this.maxHookLength + 30 - distance);
-			if (speed < 0)
+
+			// Adjusts the dead zone around the target.
+
+			var speed = this.pullSpeed * Math.log(distance / this.calmness - this.deadZone);
+			if (isNaN(speed) || speed < 0)
 				speed = 0;
-			console.debug(speed);
+			console.debug("distance: " + distance + "test: " + speed);
 			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
 
 			this.parent.body.velocity.x -= speed * Math.cos(angle);
@@ -102,7 +107,6 @@ HookShot.prototype = {
 	 */
 	hit: function() {
 		this.hook.body.velocity.x =	this.hook.body.velocity.y = 0;
-		this.parent.body.velocity.x =	this.parent.body.velocity.y = 0;
 		// Will make the update function pull the parent toward the goal until reached.
 		this.pulling = true;
 		this.shooting = false;
