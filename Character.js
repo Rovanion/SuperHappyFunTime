@@ -4,8 +4,8 @@ Character = function(gameState) {
 
 Character.prototype = {
 	GRAVITY: 1200,
-	ACCELERATION: 50,
-	JUMP_ACCELERATION: -600,
+	ACCELERATION: 75,
+	JUMP_ACCELERATION: -400,
 	MAX_SPEED: 500,
 	turnedRight: false,
 	jumping: true,
@@ -61,23 +61,25 @@ Character.prototype = {
 
 		this.enableWASD();
 
-		// Walk left and right
+		// Walk or run left and right.
 		var accel = 0;
-		if (this.cursors.right.pressed) {
-			accel = this.ACCELERATION;
-			this.legs.animations.play('right');
-			this.turnedRight = true;
-		} else if (this.cursors.left.pressed) {
-			accel = -this.ACCELERATION;
-			this.legs.animations.play('left');
-			this.turnedRight = false;
+		if (!this.hookShot.pulling){
+			if (this.cursors.right.pressed) {
+				accel = this.ACCELERATION;
+				this.legs.animations.play('right');
+				this.turnedRight = true;
+			} else if (this.cursors.left.pressed) {
+				accel = -this.ACCELERATION;
+				this.legs.animations.play('left');
+				this.turnedRight = false;
+			}
 		}
 
 		if (this.torso.body.blocked.down) {
 			this.torso.body.velocity.x += accel;
 		}
 		else {
-			this.torso.body.velocity.x += accel / 2;
+			this.torso.body.velocity.x += accel / 4;
 		}
 
 		// Avoid nasty errors.
@@ -88,9 +90,7 @@ Character.prototype = {
 		// Slow down bobby if he's touching any surface.
 		if (this.torso.body.blocked.down || this.torso.body.blocked.up
 				|| this.torso.body.blocked.left || this.torso.body.blocked.right) {
-			if (!this.cursors.left.pressed && !this.cursors.right.pressed) {
-				this.torso.body.velocity.x -= this.torso.body.velocity.x / 6;
-			}
+			this.torso.body.velocity.x -= this.torso.body.velocity.x / 10;
 		}
 
 		if(this.torso.body.blocked.down){
