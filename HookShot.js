@@ -47,7 +47,7 @@ HookShot.prototype = {
 		// a target, cancelling a failed shot or doing nothing.
 		if(this.shooting){
 			this.gameState.physics.arcade.collide(
-				this.hook, this.gameState.layer, this.hit, null, this);
+				this.hook, this.gameState.ground, this.hit, null, this);
 
 			if (distance > this.maxHookLength)
 				this.cancelHook();
