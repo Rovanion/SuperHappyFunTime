@@ -4,21 +4,21 @@ Level = function (csvfile, characterStartX, characterStartY, goalX, goalY) {
 	this.characterStartY = characterStartY;
 	this.goalX = goalX;
 	this.goalY = goalY;
-	this.firstTimeRun = true;
 };
 
 Level.prototype = {
+	// Whether or not to play the pan over the map.
+	firstTimeRun: false,
+	// Whether the panning of the level has finished.
+	panFinished: false,
 
 	preload: function() {
 		this.load.image('background', 'assets/background.png');
-
-		this.load.tilemap('map', this.csvfile, null, Phaser.Tilemap.CSV);
 		this.load.image('tilemap', 'assets/platformblock.png');
-
 		this.load.image('goal', 'assets/candy.png');
+		this.load.tilemap('map', this.csvfile, null, Phaser.Tilemap.CSV);
 
 		this.bobby = new Character(this);
-		bobby = this.bobby;
 		this.bobby.preload(this.characterStartX, this.characterStartY);
 
 		this.timer = new Timer(this);
@@ -26,46 +26,36 @@ Level.prototype = {
 	},
 
 	create: function() {
-		this.panoramaFinished = false;
-
-		var map = game.add.tilemap('map', 40, 40);
-
 		currentLevel = this.levelStateName;
 		nextLevel = this.nextLevelStateName;
 
-		map.addTilesetImage('tilemap');
-
-		this.physics.startSystem(Phaser.Physics.Arcade);
-
+		this.map = game.add.tilemap('map', 40, 40);
+		this.map.addTilesetImage('tilemap');
 		// Sets the size of the world depending on the size of the map
-		this.add.tileSprite(0, 0, map.widthInPixels, map.heightInPixels, 'background');
-		this.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-
-		this.layer = map.createLayer(0);
-
+		this.add.tileSprite(0, 0, this.map.widthInPixels, this.map.heightInPixels, 'background');
+		this.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
 		// Objects can collide with the tile
-		map.setCollisionBetween(0, 0);
+		this.map.setCollisionBetween(0, 0);
+		this.ground = this.map.createLayer(0);
 
 		this.bobby.create(this.characterStartX, this.characterStartY);
-
+		this.timer.create();
 		this.goal = this.add.sprite(this.goalX, this.goalY, 'goal');
 		this.goal.anchor.setTo(0.5, 0.5);
+
+		this.physics.startSystem(Phaser.Physics.Arcade);
 		this.physics.arcade.enable(this.goal);
 		this.physics.arcade.TILE_BIAS = 50;
-		console.debug(game.time.fps);
 
 		// Only pan the level the first time you run it.
 		if(this.firstTimeRun) {
-			// Pans the level beginning at the goal and ending at Bobby
-			this.panorama = this.tweens.create(this.camera).from(
+			this.pan = this.tweens.create(this.camera).from(
 				{x: this.goal.x, y: this.goal.y}, 3000, Phaser.Easing.Quintic.InOut, true, 200);
-			this.panorama.onComplete.add(this.panoramaCompleted, this);
+			this.pan.onComplete.add(this.panCompleted, this);
 			this.firstTimeRun = false;
 		} else {
-			this.panoramaCompleted();
+			this.panCompleted();
 		}
-
-		this.timer.create();
 
 		// Register hooks for the number keys to switch between levels.
 		keynames = [ "", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
@@ -79,7 +69,7 @@ Level.prototype = {
 	},
 
 	update: function() {
-		if (this.panoramaFinished) {
+		if (this.panFinished) {
 			this.bobby.update();
 			this.physics.arcade.overlap(this.bobby.torso, this.goal, this.goalReached);
 		}
@@ -90,11 +80,11 @@ Level.prototype = {
 	},
 
 	/**
-	 * When the panorama view is completed bobbys update function starts running and the camera is set to follow bobby again.
+	 * When the pan view is completed bobbys update function starts running and the camera is set to follow bobby again.
 	 */
-	panoramaCompleted: function() {
+	panCompleted: function() {
 		this.bobby.enableGravity();
-		this.panoramaFinished = true;
+		this.panFinished = true;
 		this.timer.started = true;
 		this.camera.follow(this.bobby.torso);
 	}

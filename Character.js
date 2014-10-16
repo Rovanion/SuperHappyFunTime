@@ -58,7 +58,7 @@ Character.prototype = {
 	update: function() {
 		// Do physics-y things first
 		this.gameState.physics.arcade.collide(this.torso,
-			this.gameState.layer);
+			this.gameState.ground);
 
 		this.hookShot.update();
 
