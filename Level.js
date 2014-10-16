@@ -4,7 +4,6 @@ Level = function (csvfile, characterStartX, characterStartY, goalX, goalY) {
 	this.characterStartY = characterStartY;
 	this.goalX = goalX;
 	this.goalY = goalY;
-	this.panoramaFinished = false;
 };
 
 Level.prototype = {
@@ -26,6 +25,8 @@ Level.prototype = {
 	},
 
 	create: function() {
+		this.panoramaFinished = false;
+
 		var map = game.add.tilemap('map', 40, 40);
 
 		currentLevel = this.levelStateName;
