@@ -3,12 +3,12 @@
  * jumping and reaching a goal using the hookshot.
  */
 
- Level3 = function() {};
+ Level4 = function() {};
 
- Level3.prototype = new Level('levels/level3.csv', 80, 400, 1500, 200);
+ Level4.prototype = new Level('levels/level4.csv', 80, 80, 2300, 120);
 
 // Overrides the preload function from Level to add update events.
-Level3.prototype.preload = function() {
+Level4.prototype.preload = function() {
 	Level.prototype.preload.call(this);
 
 	this.load.spritesheet('arrow_buttons', 'assets/arrows.png', 100, 66);
@@ -16,15 +16,8 @@ Level3.prototype.preload = function() {
 };
 
 // Overrides the update function from Level to add update events.
-Level3.prototype.create = function() {
-	this.levelStateName = '3';
-	this.nextLevelStateName = '4';
+Level4.prototype.create = function() {
+	this.levelStateName = '4';
+	this.nextLevelStateName = 'startMenu';
 	Level.prototype.create.call(this);
-
-	this.text = this.add.text(500, 300, 'Watch out for the pit!', {
-		font: "20px Verdana",
-		fill: "#000",
-		align: "center"
-	});
-	this.text.anchor.setTo(0.5, 0.5);
 };
