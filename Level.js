@@ -4,6 +4,7 @@ Level = function (csvfile, characterStartX, characterStartY, goalX, goalY) {
 	this.characterStartY = characterStartY;
 	this.goalX = goalX;
 	this.goalY = goalY;
+	this.firstTimeRun = true;
 };
 
 Level.prototype = {
@@ -51,10 +52,16 @@ Level.prototype = {
 		this.goal.anchor.setTo(0.5, 0.5);
 		this.physics.arcade.enable(this.goal);
 
-		// Pans the level beginning at the goal and ending at Bobby
-		this.panorama = this.tweens.create(this.camera).from(
-			{x: this.goal.x, y: this.goal.y}, 3000, Phaser.Easing.Quintic.InOut, true, 200);
-		this.panorama.onComplete.add(this.panoramaCompleted, this);
+		// Only pan the level the first time you run it.
+		if(this.firstTimeRun) {
+			// Pans the level beginning at the goal and ending at Bobby
+			this.panorama = this.tweens.create(this.camera).from(
+				{x: this.goal.x, y: this.goal.y}, 3000, Phaser.Easing.Quintic.InOut, true, 200);
+			this.panorama.onComplete.add(this.panoramaCompleted, this);
+			this.firstTimeRun = false;
+		} else {
+			this.panoramaCompleted();
+		}
 
 		this.timer.create();
 
