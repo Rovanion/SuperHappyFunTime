@@ -51,6 +51,7 @@ Character.prototype = {
 
 		this.torso.checkWorldBounds = true;
 		this.torso.events.onOutOfBounds.add(this.characterOutsideWorld);
+		this.torso.animations.play('right');
 
 		this.hookShot.create(this.torso);
 	},
