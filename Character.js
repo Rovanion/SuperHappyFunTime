@@ -6,9 +6,11 @@ Character.prototype = {
 	GRAVITY: 900,
 	ACCELERATION: 50,
 	JUMP_ACCELERATION: -350,
-	MAX_SPEED: 600,
+	MAX_SPEED: 350,
+	MAX_SPEED_PULLING: 600,
 	turnedRight: false,
 	jumping: true,
+	panoramaview: true,
 
 	preload: function() {
 		this.gameState.load.spritesheet('torso',
@@ -31,8 +33,6 @@ Character.prototype = {
 
 		this.gameState.physics.arcade.enable(this.torso);
 
-		this.torso.body.gravity.y = this.GRAVITY;
-
 		this.torso.anchor.setTo(0.5, 0.5);
 		this.legs.anchor.setTo(0, 0);
 
@@ -50,9 +50,9 @@ Character.prototype = {
 
 		this.torso.checkWorldBounds = true;
 		this.torso.events.onOutOfBounds.add(this.characterOutsideWorld);
+		this.torso.animations.play('right');
 
 		this.hookShot.create(this.torso);
-		this.gameState.camera.follow(this.torso);
 	},
 
 	update: function() {
@@ -62,13 +62,15 @@ Character.prototype = {
 
 		this.hookShot.update();
 
+		this.enableWASD();
+
 		// Walk left and right
 		var accel = 0;
-		if (cursors.right.isDown) {
+		if (this.cursors.right.pressed) {
 			accel = this.ACCELERATION;
 			this.legs.animations.play('right');
 			this.turnedRight = true;
-		} else if (cursors.left.isDown) {
+		} else if (this.cursors.left.pressed) {
 			accel = -this.ACCELERATION;
 			this.legs.animations.play('left');
 			this.turnedRight = false;
@@ -82,14 +84,19 @@ Character.prototype = {
 		}
 
 		// Enforce the max speed
-		if (this.torso.body.velocity.x >= this.MAX_SPEED) {
-			this.torso.body.velocity.x = this.MAX_SPEED;
+		if (!this.hookShot.pulling)
+			var speed = this.MAX_SPEED;
+		else
+			var speed = this.MAX_SPEED_PULLING;
+
+		if (this.torso.body.velocity.x >= speed) {
+			this.torso.body.velocity.x = speed;
 		}
-		else if (this.torso.body.velocity.x <= -this.MAX_SPEED) {
-			this.torso.body.velocity.x = -this.MAX_SPEED;
+		else if (this.torso.body.velocity.x <= -speed) {
+			this.torso.body.velocity.x = -speed;
 		}
-		if (this.torso.body.velocity.y <= -this.MAX_SPEED) {
-			this.torso.body.velocity.y = -this.MAX_SPEED;
+		if (this.torso.body.velocity.y <= -speed) {
+			this.torso.body.velocity.y = -speed;
 		}
 
 		// Avoid nasty errors.
@@ -100,7 +107,7 @@ Character.prototype = {
 		// Slow down bobby if he's touching any surface.
 		if (this.torso.body.blocked.down || this.torso.body.blocked.up
 				|| this.torso.body.blocked.left || this.torso.body.blocked.right) {
-			if (!cursors.left.isDown && !cursors.right.isDown) {
+			if (!this.cursors.left.pressed && !this.cursors.right.pressed) {
 				this.torso.body.velocity.x -= this.torso.body.velocity.x / 6;
 			}
 		}
@@ -117,7 +124,7 @@ Character.prototype = {
 			}
 
 			// Jump bobby, jump!
-			if (cursors.up.isDown) {
+			if (this.cursors.up.pressed) {
 				this.jumping = true;
 				this.turnedWhileJumping = false;
 				this.torso.body.velocity.y = this.JUMP_ACCELERATION;
@@ -161,6 +168,19 @@ Character.prototype = {
 	},
 
 	characterOutsideWorld : function() {
-		game.state.restart(game.state.current);
+		//game.state.restart(game.state.current);
+	},
+
+	enableGravity: function() {
+		this.torso.body.gravity.y = this.GRAVITY;
+	},
+
+	enableWASD: function() {
+		var rightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+		this.cursors.right.pressed = rightKey.isDown || cursors.right.isDown;
+		var leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+		this.cursors.left.pressed = leftKey.isDown || cursors.left.isDown;
+		var upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+		this.cursors.up.pressed = upKey.isDown || cursors.up.isDown;
 	}
 };
