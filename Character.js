@@ -97,17 +97,20 @@ Character.prototype = {
 			this.torso.body.velocity.y = -speed;
 		}
 
-		if (this.torso.body.blocked.down) {
-			if (isNaN(this.torso.body.velocity.x)) {
-				this.torso.body.velocity.x = 0;
-			}
+		// Avoid nasty errors.
+		if (isNaN(this.torso.body.velocity.x)) {
+			this.torso.body.velocity.x = 0;
+		}
 
-			// Stop bobby if he's on the ground and the user doesn't want
-			// him to move.
+		// Slow down bobby if he's touching any surface.
+		if (this.torso.body.blocked.down || this.torso.body.blocked.up
+				|| this.torso.body.blocked.left || this.torso.body.blocked.right) {
 			if (!cursors.left.isDown && !cursors.right.isDown) {
-				this.torso.body.velocity.x -= this.torso.body.velocity.x / 5;
+				this.torso.body.velocity.x -= this.torso.body.velocity.x / 6;
 			}
+		}
 
+		if(this.torso.body.blocked.down){
 			// Landing animation, note that this must be before the jump
 			// function.
 			if (this.jumping) {
@@ -134,9 +137,12 @@ Character.prototype = {
 		// Shoot on mouseDown, cancel on mouseUp
 		if (game.input.activePointer.isDown){
 			this.hookShot.shoot(
-				this.torso.x + 110 * Math.sin(angle),
-				this.torso.y + 110 * Math.cos(angle)
+				this.torso.x + 10 * Math.sin(angle),
+				this.torso.y + 10 * Math.cos(angle),
+				game.physics.arcade.angleToPointer(this.torso)
 			);
+			// To lock the head from following the mouse.
+			this.torso.rotating = true;
 		}
 		else if (game.input.activePointer.isUp && this.hookShot.shooting || this.hookShot.pulling){
 			this.hookShot.cancelHook();
