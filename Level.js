@@ -4,22 +4,21 @@ Level = function (csvfile, characterStartX, characterStartY, goalX, goalY) {
 	this.characterStartY = characterStartY;
 	this.goalX = goalX;
 	this.goalY = goalY;
-	this.firstTimeRun = true;
 };
 
 Level.prototype = {
+	// Whether or not to play the pan over the map.
+	firstTimeRun: true,
 
 	preload: function() {
 		this.load.image('background', 'assets/background.png');
-
-		this.load.tilemap('map', this.csvfile, null, Phaser.Tilemap.CSV);
-		this.load.image('tilemap', 'assets/platformblock.png');
-
 		this.load.image('goal', 'assets/candy.png');
+		this.load.image('tilemap', 'assets/platformblock.png');
+		this.load.tilemap('map', this.csvfile, null, Phaser.Tilemap.CSV);
 
 		this.bobby = new Character(this);
-		bobby = this.bobby;
 		this.bobby.preload(this.characterStartX, this.characterStartY);
+		bobby = this.bobby;
 
 		this.timer = new Timer(this);
 		this.timer.preload();
@@ -28,31 +27,27 @@ Level.prototype = {
 	create: function() {
 		this.panoramaFinished = false;
 
-		var map = game.add.tilemap('map', 40, 40);
-
 		currentLevel = this.levelStateName;
 		nextLevel = this.nextLevelStateName;
 
-		map.addTilesetImage('tilemap');
+		this.map = game.add.tilemap('map', 40, 40);
+		this.map.addTilesetImage('tilemap');
+		// Objects can collide with tiles of the index 0.
+		this.map.setCollisionBetween(0, 0);
+		this.ground = this.map.createLayer(0);
+		// Sets the size of the world depending on the size of the map
+		this.add.tileSprite(0, 0, this.map.widthInPixels, this.map.heightInPixels, 'background');
+		this.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
 
 		this.physics.startSystem(Phaser.Physics.Arcade);
-
-		// Sets the size of the world depending on the size of the map
-		this.add.tileSprite(0, 0, map.widthInPixels, map.heightInPixels, 'background');
-		this.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-
-		this.layer = map.createLayer(0);
-
-		// Objects can collide with the tile
-		map.setCollisionBetween(0, 0);
+		this.physics.arcade.TILE_BIAS = 50;
 
 		this.bobby.create(this.characterStartX, this.characterStartY);
+		this.timer.create();
 
 		this.goal = this.add.sprite(this.goalX, this.goalY, 'goal');
 		this.goal.anchor.setTo(0.5, 0.5);
 		this.physics.arcade.enable(this.goal);
-		this.physics.arcade.TILE_BIAS = 50;
-		console.debug(game.time.fps);
 
 		// Only pan the level the first time you run it.
 		if(this.firstTimeRun) {
@@ -64,8 +59,6 @@ Level.prototype = {
 		} else {
 			this.panoramaCompleted();
 		}
-
-		this.timer.create();
 
 		// Register hooks for the number keys to switch between levels.
 		keynames = [ "", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX",
