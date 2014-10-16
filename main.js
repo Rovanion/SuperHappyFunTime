@@ -20,6 +20,7 @@ window.onload = function() {
 	 */
 	function setupLevels(){
 		game.state.add('1', new Level1());
+		game.state.add('2', new Level2());
 		game.state.add('startMenu', new StartMenu());
 		game.state.add('title', new TitleScreen());
 		game.state.add('betweenLevels', new BetweenLevels());
