@@ -94,6 +94,7 @@ Level.prototype = {
 	 */
 	panoramaCompleted: function() {
 		this.bobby.enableGravity();
+		this.bobby.enableCheckWorldBounds();
 		this.panoramaFinished = true;
 		this.timer.started = true;
 		this.camera.follow(this.bobby.torso);
