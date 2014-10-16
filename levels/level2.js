@@ -18,7 +18,7 @@ Level2.prototype.preload = function() {
 // Overrides the update function from Level to add update events.
 Level2.prototype.create = function() {
 	this.levelStateName = '2';
-	this.nextLevelStateName = 'startMenu';
+	this.nextLevelStateName = '3';
 	Level.prototype.create.call(this);
 
 	this.mouse = this.add.sprite(400, 400, 'mouse');
