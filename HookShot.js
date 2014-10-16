@@ -14,7 +14,9 @@ HookShot.prototype = {
 	// Defining the length of the cooldown
 	cooldownLength: 300,
 	// The speed at which the hook draws the character towards its target.
-	speed: 1200,
+	hookSpeed: 1200,
+	// The speed at which the parent is pulled towards the target on hit.
+	pullSpeed: 400,
 	// The maximum length of the hook.
 	maxHookLength: 400,
 
@@ -40,20 +42,21 @@ HookShot.prototype = {
 
 	update: function() {
 		var distance = game.physics.arcade.distanceBetween(this.hook, this.parent);
-		this.tounge.width = distance + 6;
+		this.tounge.width = distance - 38;
 		// We're either shooting the hook, pulling the character towards
 		// a target, cancelling a failed shot or doing nothing.
 		if(this.shooting){
 			this.gameState.physics.arcade.collide(
 				this.hook, this.gameState.layer, this.hit, null, this);
 
-			if (distance > this.hookMaxLength)
+			if (distance > this.maxHookLength)
 				this.cancelHook();
+			this.tounge.width = distance + 2;
 		}
 		else if(this.pulling){
 			// Accelerate towards the target, decrease until 30 units
-			// from target where speed should reach 0.
-			var speed = this.speed - 3 * (this.maxHookLength + 30 - distance);
+			// from target where hookSpeed should reach 0.
+			var speed = this.pullSpeed - (this.maxHookLength + 30 - distance);
 			if (speed < 0)
 				speed = 0;
 			console.debug(speed);
@@ -70,9 +73,8 @@ HookShot.prototype = {
 				this.startCooldown();
 			}
 			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
-			this.hook.body.velocity.x = this.speed * Math.cos(angle);
-			this.hook.body.velocity.y = this.speed * Math.sin(angle);
-			this.tounge.width -= 38;
+			this.hook.body.velocity.x = this.hookSpeed * Math.cos(angle);
+			this.hook.body.velocity.y = this.hookSpeed * Math.sin(angle);
 		}
 		else
 			return;
@@ -90,8 +92,8 @@ HookShot.prototype = {
 			this.hook.reset(fromX, fromY);
 			this.shooting = true;
 
-			this.hook.body.velocity.x = this.speed * Math.cos(angle);
-			this.hook.body.velocity.y = this.speed * Math.sin(angle);
+			this.hook.body.velocity.x = this.hookSpeed * Math.cos(angle);
+			this.hook.body.velocity.y = this.hookSpeed * Math.sin(angle);
 		}
 	},
 

@@ -89,15 +89,14 @@ Character.prototype = {
 		else
 			var speed = this.MAX_SPEED_PULLING;
 
-		if (this.torso.body.velocity.x >= speed) {
+		if (this.torso.body.velocity.x >= speed)
 			this.torso.body.velocity.x = speed;
-		}
-		else if (this.torso.body.velocity.x <= -speed) {
+		else if (this.torso.body.velocity.x <= -speed)
 			this.torso.body.velocity.x = -speed;
-		}
-		if (this.torso.body.velocity.y <= -speed) {
+		if (this.torso.body.velocity.y >= speed)
+			this.torso.body.velocity.y = speed;
+		else if (this.torso.body.velocity.y <= -speed)
 			this.torso.body.velocity.y = -speed;
-		}
 
 		// Avoid nasty errors.
 		if (isNaN(this.torso.body.velocity.x)) {
