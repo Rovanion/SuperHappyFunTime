@@ -3,12 +3,12 @@
  * jumping and reaching a goal using the hookshot.
  */
 
- Falling = function() {};
+ Level1 = function() {};
 
- Falling.prototype = new Level('levels/Falling.csv', 60, 150, 1415, 280, '1', 'startMenu');
+ Level1.prototype = new Level('levels/level1.csv', 60, 150, 1415, 280, '1', 'startMenu');
 
 // Overrides the preload function from Level to add update events.
-Falling.prototype.preload = function() {
+Level1.prototype.preload = function() {
 	Level.prototype.preload.call(this);
 
 	this.load.spritesheet('arrow_buttons', 'assets/arrows.png', 100, 66);
@@ -16,7 +16,7 @@ Falling.prototype.preload = function() {
 };
 
 // Overrides the update function from Level to add update events.
-Falling.prototype.create = function() {
+Level1.prototype.create = function() {
 	this.levelStateName = '1';
 	this.nextLevelStateName = 'startMenu';
 

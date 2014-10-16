@@ -15,7 +15,7 @@ Level.prototype = {
 	preload: function() {
 		this.load.image('background', 'assets/background.png');
 		this.load.image('goal', 'assets/candy.png');
-		this.load.image('tilemap', 'assets/platformblock.png');
+		this.load.image('tilemap', 'assets/tilemap.png');
 		this.load.tilemap('map', this.csvfile, null, Phaser.Tilemap.CSV);
 
 		this.bobby = new Character(this);
@@ -35,8 +35,8 @@ Level.prototype = {
 		// Sets the size of the world depending on the size of the map
 		this.add.tileSprite(0, 0, this.map.widthInPixels, this.map.heightInPixels, 'background');
 		this.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-		// Objects can collide with tiles of the index 0.
-		this.map.setCollisionBetween(0, 0);
+		// Objects can collide with tiles of the index 0 to 1.
+		this.map.setCollisionBetween(0, 1);
 		this.ground = this.map.createLayer(0);
 
 		this.bobby.create(this.characterStartX, this.characterStartY);
