@@ -48,8 +48,6 @@ Character.prototype = {
 
 		this.cursors = this.gameState.input.keyboard.createCursorKeys();
 
-		this.torso.checkWorldBounds = true;
-		this.torso.events.onOutOfBounds.add(this.characterOutsideWorld);
 		this.torso.animations.play('right');
 
 		this.hookShot.create(this.torso);
@@ -167,7 +165,7 @@ Character.prototype = {
 	},
 
 	characterOutsideWorld : function() {
-		//game.state.restart(game.state.current);
+		game.state.restart(game.state.current);
 	},
 
 	enableGravity: function() {
@@ -181,5 +179,10 @@ Character.prototype = {
 		this.cursors.left.pressed = leftKey.isDown || cursors.left.isDown;
 		var upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
 		this.cursors.up.pressed = upKey.isDown || cursors.up.isDown;
+	},
+
+	enableCheckWorldBounds: function() {
+		this.torso.checkWorldBounds = true;
+		this.torso.events.onOutOfBounds.add(this.characterOutsideWorld);
 	}
 };
