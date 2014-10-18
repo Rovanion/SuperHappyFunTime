@@ -27,7 +27,7 @@ Character.prototype = {
 		this.legs = this.gameState.add.sprite(x, y, 'legs');
 		this.legs.anchor.setTo(0, 0);
 
-		this.torso = this.gameState.add.sprite(x, y, 'torso');
+		this.torso = this.gameState.add.sprite(x+20, y-10, 'torso');
 		this.torso.anchor.setTo(0.5, 0.5);
 		// Whether or not the head is rotating to indicate a cooldown.
 		this.torso.rotating = false;

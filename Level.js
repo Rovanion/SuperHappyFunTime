@@ -71,8 +71,8 @@ Level.prototype = {
 	},
 
 	update: function() {
-		this.bobby.update();
 		if (this.panFinished) {
+			this.bobby.update();
 			this.physics.arcade.overlap(this.bobby.torso, this.goal, this.goalReached);
 		}
 	},
