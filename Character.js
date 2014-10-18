@@ -48,6 +48,8 @@ Character.prototype = {
 		this.cursors = this.gameState.input.keyboard.createCursorKeys();
 
 		this.torso.animations.play('right');
+		this.legs.animations.play('jumpRight');
+		this.jumping = true;
 
 		this.hookShot.create(this.torso);
 	},
@@ -66,11 +68,13 @@ Character.prototype = {
 		if (!this.hookShot.pulling){
 			if (this.cursors.right.pressed) {
 				accel = this.ACCELERATION;
-				this.legs.animations.play('right');
+				if(!this.jumping)
+					this.legs.animations.play('right');
 				this.turnedRight = true;
 			} else if (this.cursors.left.pressed) {
 				accel = -this.ACCELERATION;
-				this.legs.animations.play('left');
+				if(!this.jumping)
+					this.legs.animations.play('left');
 				this.turnedRight = false;
 			}
 		}
@@ -99,20 +103,19 @@ Character.prototype = {
 			if (this.jumping) {
 				this.jumping = false;
 				if (this.torso.body.velocity.x > 0)
-					this.torso.animations.play('landRight');
+					this.legs.animations.play('landRight');
 				else
-					this.torso.animations.play('landLeft');
+					this.legs.animations.play('landLeft');
 			}
 
 			// Jump bobby, jump!
 			if (this.cursors.up.pressed) {
 				this.jumping = true;
-				this.turnedWhileJumping = false;
 				this.torso.body.velocity.y = this.JUMP_ACCELERATION;
 				if (this.torso.body.velocity.x > 0)
-					this.torso.animations.play('jumpRight');
+					this.legs.animations.play('jumpRight');
 				else
-					this.torso.animations.play('jumpLeft');
+					this.legs.animations.play('jumpLeft');
 			}
 		}
 
