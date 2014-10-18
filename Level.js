@@ -71,8 +71,10 @@ Level.prototype = {
 	},
 
 	update: function() {
+		this.bobby.update();
 		if (this.panFinished) {
-			this.bobby.update();
+			// Moved this.bobby.update() out of this if statement otherwise
+			// his legs don't spawn if the pan hasn't finished
 			this.physics.arcade.overlap(this.bobby.torso, this.goal, this.goalReached);
 		}
 	},
