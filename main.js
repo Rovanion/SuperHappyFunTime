@@ -23,6 +23,7 @@ window.onload = function() {
 		game.state.add('2', new Level2());
 		game.state.add('3', new Level3());
 		game.state.add('4', new Level4());
+		game.state.add('5', new Level5());
 		game.state.add('startMenu', new StartMenu());
 		game.state.add('title', new TitleScreen());
 		game.state.add('betweenLevels', new BetweenLevels());

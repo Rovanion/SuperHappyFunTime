@@ -3,18 +3,18 @@
  * jumping and reaching a goal using the hookshot.
  */
 
- Level4 = function() {};
+Level5 = function() {};
 
- Level4.prototype = new Level('levels/level4.csv', 80, 80, 2300, 120);
+Level5.prototype = new Level('levels/level5.csv', 400, 4500, 2000, 1800);
 
 // Overrides the preload function from Level to add update events.
-Level4.prototype.preload = function() {
+Level5.prototype.preload = function() {
 	Level.prototype.preload.call(this);
 };
 
 // Overrides the update function from Level to add update events.
-Level4.prototype.create = function() {
-	this.levelStateName = '4';
-	this.nextLevelStateName = '5';
+Level5.prototype.create = function() {
+	this.levelStateName = '5';
+	this.nextLevelStateName = 'startMenu';
 	Level.prototype.create.call(this);
 };
