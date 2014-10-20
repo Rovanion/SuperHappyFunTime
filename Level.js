@@ -18,6 +18,8 @@ Level.prototype = {
 		this.load.image('tilemap', 'assets/tilemap.png');
 		this.load.tilemap('map', this.csvfile, null, Phaser.Tilemap.CSV);
 
+		this.load.image('sawblade', 'assets/saw_blade.png');
+
 		this.bobby = new Character(this);
 		this.bobby.preload(this.characterStartX, this.characterStartY);
 		bobby = this.bobby;
@@ -48,6 +50,9 @@ Level.prototype = {
 		this.physics.arcade.TILE_BIAS = 50;
 		this.physics.arcade.enable(this.goal);
 
+		this.sawBlades = this.add.group();
+		this.sawBlades.enableBody = true;
+
 		// Only pan the level the first time you run it.
 		if(this.firstTimeRun) {
 			// Pans the level beginning at the goal and ending at Bobby
@@ -74,7 +79,13 @@ Level.prototype = {
 		if (this.panFinished) {
 			this.bobby.update();
 			this.physics.arcade.overlap(this.bobby.torso, this.goal, this.goalReached);
+			this.physics.arcade.overlap(this.bobby.torso, this.sawBlades, this.killed);
 		}
+
+		// Rotates the sawblades
+		this.sawBlades.forEach(function(sawBlade) {
+			sawBlade.rotation += 0.08;
+   		});
 	},
 
 	goalReached: function() {
@@ -90,6 +101,19 @@ Level.prototype = {
 		this.panFinished = true;
 		this.timer.started = true;
 		this.camera.follow(this.bobby.torso);
+	},
+
+	/**
+	 * Adds a sawblade to the level.
+	 */
+	addSawBlade: function(positionX, positionY) {
+		var sawBlade = this.add.sprite(this.sawBlades.x + positionX, this.sawBlades.y + positionY, 'sawblade');
+		sawBlade.anchor.setTo(0.5, 0.5);
+		this.sawBlades.add(sawBlade);
+	},
+
+	killed: function() {
+		game.state.restart(game.state.current);
 	}
 
 };
