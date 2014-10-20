@@ -10,9 +10,6 @@
 // Overrides the preload function from Level to add update events.
 Level3.prototype.preload = function() {
 	Level.prototype.preload.call(this);
-
-	this.load.spritesheet('arrow_buttons', 'assets/arrows.png', 100, 66);
-	this.load.spritesheet('mouse', 'assets/mouse.png', 100, 123);
 };
 
 // Overrides the update function from Level to add update events.

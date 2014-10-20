@@ -64,7 +64,6 @@ HookShot.prototype = {
 			var speed = this.pullSpeed * Math.log(distance / this.calmness - this.deadZone);
 			if (isNaN(speed) || speed < 0)
 				speed = 0;
-			console.debug("distance: " + distance + "test: " + speed);
 			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
 
 			this.parent.body.velocity.x -= speed * Math.cos(angle);
