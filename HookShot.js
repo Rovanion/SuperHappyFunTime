@@ -37,6 +37,7 @@ HookShot.prototype = {
 		this.parent = parent;
 		this.hook = this.gameState.add.sprite(-100, -100, 'hook');
 		this.gameState.physics.arcade.enable(this.hook);
+		this.hook.body.tilePadding.setTo(10, 10);
 		this.hook.anchor.setTo(0.1, 0.5);
 
 		this.tounge = this.gameState.add.tileSprite(0, 0, 0, 10, 'tounge');
