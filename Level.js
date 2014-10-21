@@ -91,17 +91,12 @@ Level.prototype = {
 			this.physics.arcade.overlap(this.bobby.torso, this.goal, this.goalReached);
 			this.physics.arcade.overlap(this.bobby.torso, this.sawBlades, this.killed, null, this);
 		}
-
-		if (this.restartTimer) {
+		if (this.restartTimer)
 			this.time.events.add(Phaser.Timer.SECOND * 2, this.restart, this);
-		}
+		if(!this.bobby.torso.alive)
+			this.physics.arcade.collide(this.bobby.meat, this.ground);
 
-		this.physics.arcade.collide(this.bobby.meat, this.ground);
-
-		// Rotates the sawblades
-		this.sawBlades.forEach(function(sawBlade) {
-			sawBlade.rotation += 0.08;
-   		});
+		this.sawBlades.update();
 	},
 
 	goalReached: function() {
@@ -126,7 +121,8 @@ Level.prototype = {
 		var sawBlade = this.add.sprite(positionX, positionY, 'sawblade');
 		sawBlade.anchor.setTo(0.5, 0.5);
 		this.sawBlades.add(sawBlade);
-		sawBlade.body.setSize(50, 50, 10, 10);
+		sawBlade.body.setSize(60, 60, 5, 5);
+		sawBlade.body.angularVelocity = 100 + Math.random() * 300;
 	},
 
 	/**
