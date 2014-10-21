@@ -5,7 +5,7 @@
 
  Level3 = function() {};
 
- Level3.prototype = new Level('levels/level3.csv', 80, 400, 1500, 200);
+ Level3.prototype = new Level('levels/level3.csv', 80, 400, 1500, 400);
 
 // Overrides the preload function from Level to add update events.
 Level3.prototype.preload = function() {
@@ -18,7 +18,7 @@ Level3.prototype.create = function() {
 	this.nextLevelStateName = '4';
 	Level.prototype.create.call(this);
 
-	this.text = this.add.text(500, 300, 'Watch out for the pit!', {
+	this.text = this.add.text(500, 500, 'Watch out for the pit!', {
 		font: "20px Verdana",
 		fill: "#000",
 		align: "center"

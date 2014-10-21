@@ -5,7 +5,7 @@
 
  Level4 = function() {};
 
- Level4.prototype = new Level('levels/level4.csv', 80, 80, 2300, 120);
+ Level4.prototype = new Level('levels/level4.csv', 80, 80, 2300, 200);
 
 // Overrides the preload function from Level to add update events.
 Level4.prototype.preload = function() {
