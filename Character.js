@@ -195,14 +195,25 @@ Character.prototype = {
 
 		var iterations = 0;
 
-		while (iterations < 80) {
-			var tmpmeat;
-			Math.random() < 0.5 ? tmpmeat = this.gameState.add.sprite(this.torso.x, this.torso.y, 'blood1') : tmpmeat = this.gameState.add.sprite(this.torso.x, this.torso.y, 'blood2');
+		for (var i = 0; i < 200; i++) {
+			if(Math.random() < 0.5)
+				var tmpmeat = this.gameState.add.sprite(this.torso.x, this.torso.y, 'blood1')
+			else
+				var tmpmeat = this.gameState.add.sprite(this.torso.x, this.torso.y, 'blood2');
+
 			this.meat.add(tmpmeat);
-			tmpmeat.body.gravity.y = 500;
-			tmpmeat.body.velocity.x = Math.random() < 0.5 ? -Math.pow(Math.random(), 2)*200 : Math.pow(Math.random(), 2)*200;
-			tmpmeat.body.velocity.y = Math.pow(Math.random(), 2)*-300;
-			iterations++;
+			tmpmeat.body.gravity.y = 1200;
+			tmpmeat.body.drag = {x: 500, y: 500};
+			tmpmeat.body.angularDrag = 500;
+			tmpmeat.anchor.setTo(0.5, 0.5);
+
+			if (Math.random() < 0.5)
+				var velocityX = -Math.pow(Math.random(), 2) * 700;
+			else
+				var velocityX = Math.pow(Math.random(), 2) * 700;
+			tmpmeat.body.velocity.x = this.torso.body.velocity.x + velocityX;
+			tmpmeat.body.velocity.y = this.torso.body.velocity.y + Math.pow(Math.random(), 2) * -700;
+			tmpmeat.body.angularVelocity = tmpmeat.body.velocity.x * Math.random();
 		}
 	}
 };
