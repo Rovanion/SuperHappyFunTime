@@ -50,7 +50,7 @@ Level.prototype = {
 		this.goal.anchor.setTo(0.5, 0.5);
 
 		this.physics.startSystem(Phaser.Physics.Arcade);
-		this.physics.arcade.TILE_BIAS = 25;
+		this.physics.arcade.TILE_BIAS = 20;
 		this.physics.arcade.enable(this.goal);
 
 		this.sawBlades = this.add.group();
@@ -119,6 +119,7 @@ Level.prototype = {
 		var sawBlade = this.add.sprite(this.sawBlades.x + positionX, this.sawBlades.y + positionY, 'sawblade');
 		sawBlade.anchor.setTo(0.5, 0.5);
 		this.sawBlades.add(sawBlade);
+		sawBlade.body.setSize(50, 50, 10, 10);
 	},
 
 	killed: function() {
