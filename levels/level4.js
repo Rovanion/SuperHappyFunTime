@@ -20,5 +20,4 @@ Level4.prototype.create = function() {
 	this.levelStateName = '4';
 	this.nextLevelStateName = 'startMenu';
 	Level.prototype.create.call(this);
-	this.addSawBlade(1350, 180);
 };
