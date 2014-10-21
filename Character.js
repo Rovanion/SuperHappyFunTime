@@ -15,6 +15,8 @@ Character.prototype = {
 			'assets/character_spritesheet_body.png', 40, 40);
 		this.gameState.load.spritesheet('legs',
 			'assets/character_spritesheet_legs.png', 40, 19);
+		this.gameState.load.image('blood1', 'assets/meat1.png');
+		this.gameState.load.image('blood2', 'assets/meat2.png');
 
 		this.hookShot = new HookShot(this.gameState);
 		this.hookShot.preload();
@@ -52,6 +54,9 @@ Character.prototype = {
 		this.jumping = true;
 
 		this.hookShot.create(this.torso);
+
+		this.meat = this.gameState.add.group();
+		this.meat.enableBody = true;
 	},
 
 	update: function() {
@@ -183,5 +188,21 @@ Character.prototype = {
 	enableCheckWorldBounds: function() {
 		this.torso.checkWorldBounds = true;
 		this.torso.events.onOutOfBounds.add(this.characterOutsideWorld);
+	},
+
+	blood: function() {
+		this.torso.kill();
+
+		var iterations = 0;
+
+		while (iterations < 80) {
+			var tmpmeat;
+			Math.random() < 0.5 ? tmpmeat = this.gameState.add.sprite(this.torso.x, this.torso.y, 'blood1') : tmpmeat = this.gameState.add.sprite(this.torso.x, this.torso.y, 'blood2');
+			this.meat.add(tmpmeat);
+			tmpmeat.body.gravity.y = 500;
+			tmpmeat.body.velocity.x = Math.random() < 0.5 ? -Math.pow(Math.random(), 2)*200 : Math.pow(Math.random(), 2)*200;
+			tmpmeat.body.velocity.y = Math.pow(Math.random(), 2)*-300;
+			iterations++;
+		}
 	}
 };

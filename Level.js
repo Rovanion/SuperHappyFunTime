@@ -11,6 +11,7 @@ Level.prototype = {
 	firstTimeRun: true,
 	// Whether the camera is panning over the map, showing it to the player.
 	panFinished: false,
+	restartTimer: false,
 
 	preload: function() {
 		this.load.image('background', 'assets/background.png');
@@ -88,8 +89,14 @@ Level.prototype = {
 		if (this.panFinished) {
 			this.bobby.update();
 			this.physics.arcade.overlap(this.bobby.torso, this.goal, this.goalReached);
-			this.physics.arcade.overlap(this.bobby.torso, this.sawBlades, this.killed);
+			this.physics.arcade.overlap(this.bobby.torso, this.sawBlades, this.killed, null, this);
 		}
+
+		if (this.restartTimer) {
+			this.time.events.add(Phaser.Timer.SECOND * 2, this.restart, this);
+		}
+
+		this.physics.arcade.collide(this.bobby.meat, this.ground);
 
 		// Rotates the sawblades
 		this.sawBlades.forEach(function(sawBlade) {
@@ -129,7 +136,7 @@ Level.prototype = {
 		var sawBlade = this.add.sprite(startPositionx, startPositiony, 'sawblade');
 		sawBlade.anchor.setTo(0.5, 0.5);
 
-		var lol = this.tweens.create(sawBlade).from({
+		this.tweens.create(sawBlade).from({
 			x: endPositionx,
 			y: endPositiony
 		}, 1500, Phaser.Easing.Linear.None, true, 0, Number.MAX_VALUE, true);
@@ -139,6 +146,14 @@ Level.prototype = {
 	},
 
 	killed: function() {
+		// Pause bobby
+		this.panFinished = false;
+		this.bobby.blood();
+		this.restartTimer = true;
+	},
+
+	restart: function() {
+		this.restartTimer = false;
 		game.state.restart(game.state.current);
 	}
 
