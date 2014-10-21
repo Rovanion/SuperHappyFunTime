@@ -1,6 +1,6 @@
 window.onload = function() {
 
-	game = new Phaser.Game(800, 600, Phaser.AUTO, '', {create: create});
+	game = new Phaser.Game(400, 300, Phaser.AUTO, '', {create: create});
 
 	finishedLevelTime = 0;
 	currentLevel = null;
@@ -9,7 +9,7 @@ window.onload = function() {
 	function create () {
 		cursors = game.input.keyboard.createCursorKeys();
 		setupLevels();
-		game.state.start('title');
+		game.state.start('1');
 	}
 
 	/**

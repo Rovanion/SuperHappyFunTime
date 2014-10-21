@@ -26,16 +26,19 @@ Level.prototype = {
 
 		this.timer = new Timer(this);
 		this.timer.preload();
+
+		this.parallax = new Parallax(this);
+		this.parallax.preload();
 	},
 
 	create: function() {
 		currentLevel = this.levelStateName;
 		nextLevel = this.nextLevelStateName;
 
+		this.parallax.create();
 		this.map = game.add.tilemap('map', 40, 40);
 		this.map.addTilesetImage('tilemap');
-		// Sets the size of the world depending on the size of the map
-		this.add.tileSprite(0, 0, this.map.widthInPixels, this.map.heightInPixels, 'background');
+
 		this.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
 		// Objects can collide with tiles of the index 0 to 1.
 		this.map.setCollisionBetween(0, 1);
@@ -81,6 +84,7 @@ Level.prototype = {
 	},
 
 	update: function() {
+		this.parallax.update();
 		if (this.panFinished) {
 			this.bobby.update();
 			this.physics.arcade.overlap(this.bobby.torso, this.goal, this.goalReached);
