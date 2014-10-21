@@ -3,9 +3,9 @@
  * jumping and reaching a goal using the hookshot.
  */
 
- Level1 = function() {};
+Level1 = function() {};
 
- Level1.prototype = new Level('levels/level1.csv', 80, 400, 1415, 280);
+ Level1.prototype = new Level('levels/level1.csv', 80, 400, 1415, 325);
 
 // Overrides the preload function from Level to add update events.
 Level1.prototype.preload = function() {
@@ -24,7 +24,7 @@ Level1.prototype.create = function() {
 
 	// Adds a picture of the arrow buttons to show the user that these are used to jump and move left and right
 
-	this.arrowkeys = this.add.sprite(300, 250, 'arrow_buttons');
+	this.arrowkeys = this.add.sprite(300, 350, 'arrow_buttons');
 	this.arrowkeys.anchor.setTo(0.5, 0.5);
 	this.arrowkeys.animations.add('blinking', [0, 1], 1);
 
@@ -51,7 +51,7 @@ Level1.prototype.create = function() {
 
 	// Adds a picture of the mouse button to show the user that it can be used
 
-	this.mouse = this.add.sprite(1150, 250, 'mouse');
+	this.mouse = this.add.sprite(1150, 350, 'mouse');
 	this.mouse.anchor.setTo(0.5, 0.5);
 	this.mouse.animations.add('blinking', [0, 1], 1);
 
