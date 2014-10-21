@@ -58,9 +58,6 @@ HookShot.prototype = {
 			this.tounge.width = distance + 2;
 		}
 		else if(this.pulling){
-
-			// Adjusts the dead zone around the target.
-
 			var speed = this.pullSpeed * Math.log(distance / this.calmness - this.deadZone);
 			if (isNaN(speed) || speed < 0)
 				speed = 0;
@@ -79,6 +76,7 @@ HookShot.prototype = {
 			var angle = game.physics.arcade.angleBetween(this.hook, this.parent);
 			this.hook.body.velocity.x = this.hookSpeed * Math.cos(angle);
 			this.hook.body.velocity.y = this.hookSpeed * Math.sin(angle);
+			this.tounge.width = distance - 38;
 		}
 		else
 			return;
