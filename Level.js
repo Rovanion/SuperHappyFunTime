@@ -56,8 +56,13 @@ Level.prototype = {
 		// Only pan the level the first time you run it.
 		if(this.firstTimeRun) {
 			// Pans the level beginning at the goal and ending at Bobby
-			this.pan = this.tweens.create(this.camera).from(
-				{x: this.goal.x, y: this.goal.y}, 3000, Phaser.Easing.Quintic.InOut, true, 200);
+			camera = this.camera;
+			this.camera.x = this.bobby.torso.x - this.camera.view.width / 2;
+			this.camera.y = this.bobby.torso.y - this.camera.view.height / 2;
+			this.pan = this.tweens.create(this.camera).from({
+				x: this.goal.x - this.camera.view.width / 2,
+				y: this.goal.y - this.camera.view.height / 2
+			}, 3000, Phaser.Easing.Quintic.InOut, true, 200);
 			this.pan.onComplete.add(this.panCompleted, this);
 			this.firstTimeRun = false;
 		} else {
