@@ -52,16 +52,20 @@ Character.prototype = {
 		this.jumping = true;
 
 		this.hookShot.create(this.torso);
+		this.enableWASD();
 	},
 
-	update: function() {
+	/**
+	 * @param inputEnabled Whether or not the user is able to control the character.
+	 */
+	update: function(inputEnabled) {
 		// Do physics-y things first
 		this.gameState.physics.arcade.collide(this.torso,
 			this.gameState.ground);
 
+		if(inputEnabled)
+			this.checkKeyPresses();
 		this.hookShot.update();
-
-		this.enableWASD();
 
 		// Walk or run left and right.
 		var accel = 0;
@@ -121,23 +125,27 @@ Character.prototype = {
 
 		var angle = -game.physics.arcade.angleToPointer(this.torso) + Math.PI / 2;
 		// Shoot on mouseDown, cancel on mouseUp
-		if (game.input.activePointer.isDown){
-			this.hookShot.shoot(
-				this.torso.x + 20 * Math.sin(angle),
-				this.torso.y + 20 * Math.cos(angle),
-				game.physics.arcade.angleToPointer(this.torso)
-			);
-			// To lock the head from following the mouse.
-			this.torso.rotating = true;
-		}
-		else if (game.input.activePointer.isUp && this.hookShot.shooting || this.hookShot.pulling){
-			this.hookShot.cancelHook();
+		if(inputEnabled){
+			if (game.input.activePointer.isDown){
+				this.hookShot.shoot(
+					this.torso.x + 20 * Math.sin(angle),
+					this.torso.y + 20 * Math.cos(angle),
+					game.physics.arcade.angleToPointer(this.torso)
+				);
+				// To lock the head from following the mouse.
+				this.torso.rotating = true;
+			}
+			else if (game.input.activePointer.isUp
+							 && this.hookShot.shooting
+							 || this.hookShot.pulling){
+				this.hookShot.cancelHook();
+			}
 		}
 
 		// So don't ask me exactly why I add π / 2 here, I just do.
 		angle += Math.PI / 2;
 
-		if(!this.torso.rotating){
+		if(inputEnabled && !this.torso.rotating){
 			if (angle > Math.PI * 3 / 2 || angle < Math.PI / 2) {
 				this.torso.animations.frame = 0;
 				this.torso.rotation = -angle;
@@ -172,12 +180,17 @@ Character.prototype = {
 	},
 
 	enableWASD: function() {
-		var rightKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
-		this.cursors.right.pressed = rightKey.isDown || cursors.right.isDown;
-		var leftKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
-		this.cursors.left.pressed = leftKey.isDown || cursors.left.isDown;
-		var upKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
-		this.cursors.up.pressed = upKey.isDown || cursors.up.isDown;
+		this.WKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
+		this.AKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
+		this.DKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
+		this.ÄKey = game.input.keyboard.addKey(Phaser.Keyboard.Ä);
+		this.EKey = game.input.keyboard.addKey(Phaser.Keyboard.E);
+	},
+
+	checkKeyPresses: function(){
+		this.cursors.up.pressed = this.WKey.isDown || this.ÄKey.isDown || cursors.up.isDown;
+		this.cursors.left.pressed = this.AKey.isDown || cursors.left.isDown;
+		this.cursors.right.pressed = this.DKey.isDown || this.EKey.isDown || cursors.right.isDown;
 	},
 
 	enableCheckWorldBounds: function() {

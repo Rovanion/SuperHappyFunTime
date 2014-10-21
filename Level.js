@@ -11,21 +11,26 @@ Level.prototype = {
 	firstTimeRun: true,
 	// Whether the camera is panning over the map, showing it to the player.
 	panFinished: false,
+	// Whether or not the timer is enabled. Disabled for demo scenes.
+	timerEnabled: true,
+	// Whether or not user input is enabled. Disabled for demo scenes.
+	inputEnabled: true,
 
 	preload: function() {
 		this.load.image('background', 'assets/background.png');
 		this.load.image('goal', 'assets/candy.png');
 		this.load.image('tilemap', 'assets/tilemap.png');
-		this.load.tilemap('map', this.csvfile, null, Phaser.Tilemap.CSV);
-
 		this.load.image('sawblade', 'assets/saw_blade.png');
+		this.load.tilemap('map', this.csvfile, null, Phaser.Tilemap.CSV);
 
 		this.bobby = new Character(this);
 		this.bobby.preload(this.characterStartX, this.characterStartY);
 		bobby = this.bobby;
 
-		this.timer = new Timer(this);
-		this.timer.preload();
+		if(this.timerEnabled){
+			this.timer = new Timer(this);
+			this.timer.preload();
+		}
 
 		this.parallax = new Parallax(this);
 		this.parallax.preload();
@@ -45,7 +50,8 @@ Level.prototype = {
 		this.ground = this.map.createLayer(0);
 
 		this.bobby.create(this.characterStartX, this.characterStartY);
-		this.timer.create();
+		if(this.timerEnabled)
+			this.timer.create();
 		this.goal = this.add.sprite(this.goalX, this.goalY, 'goal');
 		this.goal.anchor.setTo(0.5, 0.5);
 
@@ -86,7 +92,7 @@ Level.prototype = {
 	update: function() {
 		this.parallax.update();
 		if (this.panFinished) {
-			this.bobby.update();
+			this.bobby.update(this.inputEnabled);
 			this.physics.arcade.overlap(this.bobby.torso, this.goal, this.goalReached);
 			this.physics.arcade.overlap(this.bobby.torso, this.sawBlades, this.killed);
 		}
@@ -108,7 +114,8 @@ Level.prototype = {
 		this.bobby.enableGravity();
 		this.bobby.enableCheckWorldBounds();
 		this.panFinished = true;
-		this.timer.started = true;
+		if(this.timerEnabled)
+			this.timer.started = true;
 		this.camera.follow(this.bobby.torso);
 	},
 
