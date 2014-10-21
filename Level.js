@@ -47,7 +47,7 @@ Level.prototype = {
 		this.goal.anchor.setTo(0.5, 0.5);
 
 		this.physics.startSystem(Phaser.Physics.Arcade);
-		this.physics.arcade.TILE_BIAS = 50;
+		this.physics.arcade.TILE_BIAS = 25;
 		this.physics.arcade.enable(this.goal);
 
 		this.sawBlades = this.add.group();

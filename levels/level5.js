@@ -15,6 +15,6 @@ Level5.prototype.preload = function() {
 // Overrides the update function from Level to add update events.
 Level5.prototype.create = function() {
 	this.levelStateName = '5';
-	this.nextLevelStateName = 'startMenu';
+	this.nextLevelStateName = '6';
 	Level.prototype.create.call(this);
 };
