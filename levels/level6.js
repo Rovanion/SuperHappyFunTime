@@ -19,7 +19,7 @@ Level6.prototype.create = function() {
 	Level.prototype.create.call(this);
 
 	this.addSawBlade(800, 700);
-	this.addSawBlade(1600, 450);
-	this.addSawBlade(1900, 450);
+	this.addSawBlade(1700, 450);
+	this.addSawBlade(1950, 450);
 	this.addSawBlade(2200, 450);
 };
