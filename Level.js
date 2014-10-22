@@ -131,13 +131,12 @@ Level.prototype = {
 	addMovingSawBlade: function(startPositionx, startPositiony, endPositionx, endPositiony) {
 		var sawBlade = this.add.sprite(startPositionx, startPositiony, 'sawblade');
 		sawBlade.anchor.setTo(0.5, 0.5);
-
 		this.tweens.create(sawBlade).from({
 			x: endPositionx,
 			y: endPositiony
 		}, 1500, Phaser.Easing.Linear.None, true, 0, Number.MAX_VALUE, true);
-
 		this.sawBlades.add(sawBlade);
+		sawBlade.body.setSize(60, 60, 5, 5);
 		sawBlade.body.angularVelocity = 100 + Math.random() * 300;
 	},
 
