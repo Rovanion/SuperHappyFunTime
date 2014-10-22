@@ -45,7 +45,7 @@ HookShot.prototype = {
 		this.hook.addChild(this.tounge);
 	},
 
-	update: function() {
+	update: function(inputEnabled) {
 		var distance = game.physics.arcade.distanceBetween(this.hook, this.parent);
 		this.tounge.width = distance - 16;
 		// We're either shooting the hook, pulling the character towards

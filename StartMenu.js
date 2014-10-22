@@ -1,25 +1,31 @@
-StartMenu = function() {};
+StartMenu = function(){
+	this.firstTimeRun = false;
+	this.timerEnabled = false;
+	this.inputEnabled = false;
+	this.cameraFollowsBobby = false;
 
-StartMenu.prototype = {
-
-	preload: function() {
+	this.preload = function() {
+		Level.prototype.preload.call(this);
 		this.load.spritesheet('menyknapp', 'assets/menyknapp.png');
-	},
+	};
 
-	create: function() {
+	this.create = function() {
+		Level.prototype.create.call(this);
+
+		this.demo = new Demo(this, this.bobby);
+		this.demo.run();
 
 		this.choice = 0;
-
 		this.loadChoices();
 
 		this.cursors = this.input.keyboard.createCursorKeys();
 		this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
 		this.updateTextColor();
-	},
+	};
 
-	update: function() {
-
+	this.update = function() {
+		Level.prototype.update.call(this);
 		if (this.enterKey.justPressed(1)) {
 			if (this.choice === 0)
 				this.play();
@@ -38,14 +44,14 @@ StartMenu.prototype = {
 			this.updateTextColor();
 		}
 
-	},
+	};
 
-	loadChoices: function() {
+	this.loadChoices = function() {
 		this.choices = [this.playText, this.loadText, this.highScoreText];
 
 		for (var i = 0; i < this.choices.length; i++) {
 			this.choices[i] = {};
-			// TODO: Make it so that not every button changes to level 1.
+			// TODO = Make it so that not every button changes to level 1.
 			this.choices[i].button = this.add.button(
 				0, game.height - 310 + i * 100, 'menyknapp', this.play, this
 			);
@@ -58,7 +64,7 @@ StartMenu.prototype = {
 
 			this.choices[i].text = this.add.text(50, game.height - 300 + i*100, "", {
 				font: "50px Verdana",
-				fill: "#ffffff",
+				fil: "#ffffff",
 				align: "left"
 			});
 
@@ -75,9 +81,9 @@ StartMenu.prototype = {
 			}
 
 		}
-	},
+	};
 
-	updateTextColor: function() {
+	this.updateTextColor = function() {
 		for (var i = 0; i < this.choices.length; i++) {
 			if (this.choice === i) {
 				this.choices[i].text.fill = "#ff6789";
@@ -85,20 +91,22 @@ StartMenu.prototype = {
 				this.choices[i].text.fill = "#ffffff";
 			}
 		}
-	},
+	};
 
 	/**
 	 * Fired when the play button is pressed.
 	 */
-	play: function(){
+	this.play = function(){
 		game.state.start('1');
-	},
+	};
 
 	/**
 	 * Fired when the active pointer enters a button.
 	 */
-	mouseOver: function(i){
+	this.mouseOver = function(i){
 		this.choice = i;
 		this.updateTextColor();
-	}
-};
+	};
+}
+
+StartMenu.prototype = new Level('levels/startMenu.csv', 100, 200, 100, 120);
