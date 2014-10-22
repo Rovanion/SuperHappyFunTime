@@ -18,7 +18,7 @@ Level3.prototype.create = function() {
 	this.nextLevelStateName = '4';
 	Level.prototype.create.call(this);
 
-	this.text = this.add.text(500, 500, 'Watch out for the pit!', {
+	this.text = this.add.text(300, 550, 'Watch out for the pit!', {
 		font: "20px Verdana",
 		fill: "#000",
 		align: "center"

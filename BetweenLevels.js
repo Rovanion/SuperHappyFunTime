@@ -11,6 +11,7 @@ BetweenLevels.prototype = {
 		this.loadChoices();
 		this.cursors = this.input.keyboard.createCursorKeys();
 		this.enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+		this.stage.setBackgroundColor('#eff');
 		this.updateTextColor();
 
 		var congratulationsText = this.add.text(game.width/2, 100, 'You\'re awesome!', {
