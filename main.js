@@ -9,7 +9,7 @@ window.onload = function() {
 	function create () {
 		cursors = game.input.keyboard.createCursorKeys();
 		setupLevels();
-		game.state.start('startMenu');
+		game.state.start('title');
 	}
 
 	/**
