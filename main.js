@@ -1,6 +1,6 @@
 window.onload = function() {
 
-	game = new Phaser.Game(1024, 768, Phaser.AUTO, '', {create: create});
+	game = new Phaser.Game(1024, 768, Phaser.CANVAS, '', {create: create});
 
 	finishedLevelTime = 0;
 	currentLevel = null;
