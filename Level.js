@@ -101,8 +101,6 @@ Level.prototype = {
 			this.time.events.add(Phaser.Timer.SECOND * 2, this.restart, this);
 		if(!this.bobby.torso.alive)
 			this.physics.arcade.collide(this.bobby.meat, this.ground);
-
-		this.sawBlades.update();
 	},
 
 	goalReached: function() {
