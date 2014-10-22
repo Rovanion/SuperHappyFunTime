@@ -17,10 +17,10 @@ Level1.prototype.preload = function() {
 
 // Overrides the update function from Level to add update events.
 Level1.prototype.create = function() {
-	Level.prototype.create.call(this);
-
 	this.levelStateName = '1';
 	this.nextLevelStateName = '2';
+	
+	Level.prototype.create.call(this);
 
 	// Adds a picture of the arrow buttons to show the user that these are used to jump and move left and right
 

@@ -6,20 +6,25 @@
 Demo = function(gameState, character){
 	this.gameState = gameState;
 	this.character = character;
-}
+};
 
 Demo.prototype = {
 	run: function(){
-		this.gameState.time.events.add(1000, this.walkRight, this, 850);
-		this.gameState.time.events.add(1500, this.shoot, this, -Math.PI / 16, 610);
-		this.gameState.time.events.add(2000, this.walkRight, this, 1300);
-		this.gameState.time.events.add(3400, this.shoot, this, -Math.PI * 20 / 32, 900);
-		this.gameState.time.events.add(3400, this.walkLeft, this, 200);
-		this.gameState.time.events.add(3500, this.jump, this);
-		this.gameState.time.events.add(4200, this.walkLeft, this, 3000);
-		this.gameState.time.events.add(4800, this.jump, this);
-		this.gameState.time.events.add(5600, this.jump, this);
-		this.gameState.time.events.add(6600, this.jump, this);
+		for (var i = 0; i < 100; i++) {
+
+			this.gameState.time.events.add(1000 + i*8500, this.walkRight, this, 850);
+			this.gameState.time.events.add(1500 + i*8500, this.shoot, this, -Math.PI / 16, 610);
+			this.gameState.time.events.add(2000 + i*8500, this.walkRight, this, 1060);
+			this.gameState.time.events.add(3400 + i*8500, this.shoot, this, -Math.PI * 20 / 32, 900);
+			this.gameState.time.events.add(3400 + i*8500, this.walkLeft, this, 200);
+			this.gameState.time.events.add(3500 + i*8500, this.jump, this);
+			this.gameState.time.events.add(4200 + i*8500, this.walkLeft, this, 4000);
+			this.gameState.time.events.add(4800 + i*8500, this.jump, this);
+			this.gameState.time.events.add(5200 + i*8500, this.jump, this);
+			this.gameState.time.events.add(6800 + i*8500, this.jump, this);
+			this.gameState.time.events.add(7800 + i*8500, this.jump, this);
+			this.gameState.time.events.add(8500 + i*8500, this.resetBobby, this);
+		}
 	},
 
 	/**
@@ -61,7 +66,7 @@ Demo.prototype = {
 	walkLeft: function(duration){
 		this.character.legs.animations.play('left', null, true);
 		this.character.torso.body.acceleration.setTo(-this.character.ACCELERATION * 20, 0);
-		this.character.torso.angle
+		//this.character.torso.angle
 		this.gameState.time.events.add(duration, this.stopWalking, this);
 	},
 
@@ -81,5 +86,12 @@ Demo.prototype = {
 			this.character.torso.body.velocity.x,
 			this.character.JUMP_ACCELERATION
 		);
+	},
+
+	resetBobby: function() {
+		this.character.torso.body.velocity.x = 0;
+		this.character.torso.body.velocity.y = 0;
+		this.character.torso.x = 100;
+		this.character.torso.y = 200;
 	}
-}
+};
