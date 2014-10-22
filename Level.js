@@ -138,7 +138,7 @@ Level.prototype = {
 		}, 1500, Phaser.Easing.Linear.None, true, 0, Number.MAX_VALUE, true);
 
 		this.sawBlades.add(sawBlade);
-
+		sawBlade.body.angularVelocity = 100 + Math.random() * 300;
 	},
 
 	killed: function() {
