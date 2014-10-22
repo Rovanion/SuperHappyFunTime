@@ -15,6 +15,7 @@ Level.prototype = {
 	timerEnabled: true,
 	// Whether or not user input is enabled. Disabled for demo scenes.
 	inputEnabled: true,
+	cameraFollowsBobby: true,
 
 	preload: function() {
 		this.load.image('background', 'assets/background.png');
@@ -113,11 +114,13 @@ Level.prototype = {
 	 */
 	panCompleted: function() {
 		this.bobby.enableGravity();
-		this.bobby.enableCheckWorldBounds();
 		this.panFinished = true;
 		if(this.timerEnabled)
 			this.timer.started = true;
-		this.camera.follow(this.bobby.torso);
+		if(this.cameraFollowsBobby){
+			this.camera.follow(this.bobby.torso);
+			this.bobby.enableCheckWorldBounds();
+		}
 	},
 
 	/**

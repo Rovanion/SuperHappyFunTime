@@ -2,6 +2,7 @@ StartMenu = function(){
 	this.firstTimeRun = false;
 	this.timerEnabled = false;
 	this.inputEnabled = false;
+	this.cameraFollowsBobby = false;
 
 	this.preload = function() {
 		Level.prototype.preload.call(this);

@@ -11,18 +11,17 @@ Demo = function(gameState, character){
 Demo.prototype = {
 	run: function(){
 		for (var i = 0; i < 100; i++) {
-
 			this.gameState.time.events.add(1000 + i*8500, this.walkRight, this, 850);
 			this.gameState.time.events.add(1500 + i*8500, this.shoot, this, -Math.PI / 16, 610);
 			this.gameState.time.events.add(2000 + i*8500, this.walkRight, this, 1060);
-			this.gameState.time.events.add(3400 + i*8500, this.shoot, this, -Math.PI * 20 / 32, 900);
-			this.gameState.time.events.add(3400 + i*8500, this.walkLeft, this, 200);
-			this.gameState.time.events.add(3500 + i*8500, this.jump, this);
-			this.gameState.time.events.add(4200 + i*8500, this.walkLeft, this, 4000);
-			this.gameState.time.events.add(4800 + i*8500, this.jump, this);
-			this.gameState.time.events.add(5200 + i*8500, this.jump, this);
-			this.gameState.time.events.add(6800 + i*8500, this.jump, this);
-			this.gameState.time.events.add(7800 + i*8500, this.jump, this);
+			this.gameState.time.events.add(3300 + i*8500, this.walkLeft, this, 200);
+			this.gameState.time.events.add(3500 + i*8500, this.shoot, this, -Math.PI * 20 / 32, 900);
+			this.gameState.time.events.add(3600 + i*8500, this.jump, this);
+			this.gameState.time.events.add(4200 + i*8500, this.walkLeft, this, 3500);
+			this.gameState.time.events.add(4500 + i*8500, this.jump, this);
+			this.gameState.time.events.add(5100 + i*8500, this.jump, this);
+			this.gameState.time.events.add(5700 + i*8500, this.jump, this);
+			this.gameState.time.events.add(6300 + i*8500, this.jump, this);
 			this.gameState.time.events.add(8500 + i*8500, this.resetBobby, this);
 		}
 	},
@@ -82,10 +81,12 @@ Demo.prototype = {
 	 * Make the character jump
 	 */
 	jump: function(){
-		this.character.torso.body.velocity.setTo(
-			this.character.torso.body.velocity.x,
-			this.character.JUMP_ACCELERATION
-		);
+		if(this.character.torso.body.blocked.down){
+			this.character.torso.body.velocity.setTo(
+				this.character.torso.body.velocity.x,
+				this.character.JUMP_ACCELERATION
+			);
+		}
 	},
 
 	resetBobby: function() {
