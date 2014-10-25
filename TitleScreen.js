@@ -44,9 +44,14 @@ TitleScreen.prototype = {
 		this.graphics.scale.set(size / 1430, size / 1216);
 		this.graphics.position.setTo((game.width - size) / 2, (game.height - size) / 2);
 
+		this.input.keyboard.addCallbacks(this, this.goToMenu);
 	},
 	update: function(){
 		if(game.input.activePointer.isDown)
 			game.state.start('startMenu');
+	},
+
+	goToMenu: function(){
+		game.state.start('startMenu');
 	}
-}
+};

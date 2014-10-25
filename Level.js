@@ -63,6 +63,8 @@ Level.prototype = {
 		this.sawBlades = this.add.group();
 		this.sawBlades.enableBody = true;
 
+		this.input.keyboard.addCallbacks(this, this.restart);
+
 		// Only pan the level the first time you run it.
 		if(this.firstTimeRun) {
 			// Pans the level beginning at the goal and ending at Bobby
@@ -96,9 +98,7 @@ Level.prototype = {
 			this.bobby.update(this.inputEnabled);
 			this.physics.arcade.overlap(this.bobby.torso, this.goal, this.goalReached);
 			this.physics.arcade.overlap(this.bobby.torso, this.sawBlades, this.killed, null, this);
-		}
-		if (this.restartTimer)
-			this.time.events.add(Phaser.Timer.SECOND * 2, this.restart, this);
+		}	
 		if(!this.bobby.torso.alive)
 			this.physics.arcade.collide(this.bobby.meat, this.ground);
 	},
@@ -155,8 +155,10 @@ Level.prototype = {
 	},
 
 	restart: function() {
-		this.restartTimer = false;
-		game.state.restart(game.state.current);
+		if(this.restartTimer) {
+			this.restartTimer = false;
+			game.state.restart(game.state.current);
+		}
 	}
 
 };
